@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace YAMS.Redux
+namespace YAMS.Redux.GUI
 {
     /// <summary>
     /// Interaction logic for App.xaml
