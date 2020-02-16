@@ -23,7 +23,18 @@ namespace YAMS.Redux.Data
         }
 
         public virtual DbSet<MinecraftServer> Servers { get; set; }
-
+        public virtual DbSet<MinecraftServerSetting> ServersConfig { get; set; }
+        public virtual DbSet<YAMSSetting> Settings { get; set; }
+        public virtual DbSet<Player> Players { get; set; }
+        public virtual DbSet<MincraftManifestFile> ManifestFiles { get; set; }
+        public DbSet<MinecraftJarFile> VersionFiles { get; set; }
+        public DbSet<ChattMessage> Chats { get; set; }
+        public DbSet<JobSetting> Jobs { get; set; }
+        /// <summary>
+        /// Logging is done by NLog, this should only be used for reading.
+        /// </summary>
+        public DbSet<LogRow> YAMSLog { get; set; }
+        
     }
 
 }

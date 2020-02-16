@@ -2,22 +2,33 @@
 
 namespace YAMS.Redux.Data
 {
+
+    public enum MinecraftServerType
+    {
+        Unknown = 0,
+        Default,
+        Vanilla,
+        Snapshot, // Pre
+        // Spigot, // https://www.spigotmc.org/wiki/about-spigot/
+        Custom
+    }
+
     public class MinecraftServer
     {
         [Key]
-        public int ServerId { get; set; }
+        public int Id { get; set; }
 
         [StringLength(255)]
-        public string ServerName { get; set; }
+        public string Name { get; set; }
 
-        public bool ServerEnableServerOptimisations { get; set; }
+        public bool EnableServerOptimisations { get; set; }
 
-        public int ServerAssignedMemory { get; set; }
+        public int AssignedMemory { get; set; }
 
-        public bool ServerAutoStart { get; set; }
+        public bool AutoStart { get; set; }
 
         [StringLength(100)]
-        public string ServerType { get; set; }
+        public string MinecraftServerType { get; set; }
 
     }
 
