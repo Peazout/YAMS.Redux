@@ -11,6 +11,7 @@ namespace YAMS.Redux.Data
         NotSet = 0,
         FirstRunCompleted,
         DefaultServerMemory,
+        DefaultAutostartServer,
         EnableJavaOptimisations,
         ListenPortAdmin,
         ListenPortPublic,
@@ -19,7 +20,8 @@ namespace YAMS.Redux.Data
         StoragePath,
         YAMSGuid,
         YAMSInstalledVersion,
-        EnablePublicSite,      
+        EnablePublicSite,   
+        
 
     }
 

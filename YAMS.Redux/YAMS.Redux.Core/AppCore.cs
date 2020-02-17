@@ -66,6 +66,11 @@ namespace YAMS.Redux.Core
 
             // Check if this is the first time we run.
             if (!DBHelper.GetSetting(YAMSSetting.FirstRunCompleted).GetValueAsBool) InstallHelper.FirstRun();
+            // And if it is not first run, still check if we have new settins to add or update
+            InstallHelper.DefaultSettings();
+
+
+
 
             throw new NotImplementedException("Execute function not completed.");
 

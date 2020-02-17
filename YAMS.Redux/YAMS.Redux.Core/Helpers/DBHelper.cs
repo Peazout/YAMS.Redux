@@ -9,6 +9,7 @@ using YAMS.Redux.Data;
 
 namespace YAMS.Redux.Core.Helpers
 {
+
     public static class DBHelper
     {
 
@@ -209,6 +210,47 @@ namespace YAMS.Redux.Core.Helpers
             }
 
             return true;
+        }
+
+        #endregion
+
+        #region Minecraft server
+
+        /// <summary>
+        /// Adding server to database with default values.
+        /// </summary>
+        /// <returns>Serverid for the new server.</returns>
+        public static MinecraftServer AddServer(string title, int memory, MinecraftServerType mctype = MinecraftServerType.Vanilla)
+        {
+            using (var db = GetNewContext())
+            {
+                var row = new MinecraftServer()
+                {
+                    Name = title,
+                    AssignedMemory = memory,
+                    AutoStart = DBHelper.GetSetting(YAMSSetting.DefaultAutostartServer).GetValueAsBool,
+                    EnableServerOptimisations = DBHelper.GetSetting(YAMSSetting.EnableJavaOptimisations).GetValueAsBool,
+                    ServerType = mctype,
+                };
+
+                db.Servers.Add(row);
+                db.SaveChanges();
+
+                return row;
+
+            }
+
+        }
+
+        /// <summary>
+        /// Get the server object for serverid
+        /// </summary>
+        public static MinecraftServer GetServer(int serverid)
+        {
+            using (var DBContext = GetNewContext())
+            {
+                return (from s in DBContext.Servers where s.Id == serverid select s).SingleOrDefault();
+            }
         }
 
         #endregion

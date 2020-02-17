@@ -71,11 +71,12 @@ namespace YAMS.Redux.Core.Helpers
 
             MyLog.Info("Start setup for first run of {AppName}", AppCore.AppName);
 
+            // App settings
             DefaultPaths();
             DefaultSettings();
 
             // Setup 1 new server.
-            MCServerHandler.CreateNewServer("Yet another Mincraft server", DBHelper.GetSetting(YAMSSetting.DefaultServerMemory));
+            MincraftServerHelper.CreateNewServer("Yet another Mincraft server", DBHelper.GetSetting(YAMSSetting.DefaultServerMemory).GetValueAsInt);
 
             //Tell the DB that we've run this
             MyLog.Info("Setup of YAMS complete.");
@@ -108,6 +109,7 @@ namespace YAMS.Redux.Core.Helpers
             {
                 case 0:
                     DBHelper.SetSetting(YAMSSetting.DefaultServerMemory, "1024");
+                    DBHelper.SetSetting(YAMSSetting.DefaultAutostartServer, "true");
                     // DBHelper.SetSetting("EnableJavaOptimisations", "true");
                     DBHelper.SetSetting(YAMSSetting.ListenPortAdmin, "56552"); //Use an IANA legal internal port 49152 - 65535
                     DBHelper.SetSetting(YAMSSetting.ListenPortPublic, Convert.ToString(NetworkHelper.FindNextAvailablePort(80))); //Find nearest open port to 80 for public site

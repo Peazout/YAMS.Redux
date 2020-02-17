@@ -13,7 +13,7 @@ namespace YAMS.Redux.Data
         Custom
     }
 
-    public class MinecraftServer
+    public partial class MinecraftServer
     {
         [Key]
         public int Id { get; set; }
@@ -28,7 +28,7 @@ namespace YAMS.Redux.Data
         public bool AutoStart { get; set; }
 
         [StringLength(100)]
-        public string MinecraftServerType { get; set; }
+        public MinecraftServerType ServerType { get; set; }
 
     }
 

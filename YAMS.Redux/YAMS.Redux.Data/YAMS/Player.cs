@@ -17,6 +17,8 @@ namespace YAMS.Redux.Data
         [StringLength(200)]
         public string Guid { get; set; }
 
+        public DateTime LastConnected { get; set; }
+
         public int ServerId { get; set; }
 
     }

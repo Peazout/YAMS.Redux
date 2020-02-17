@@ -35,6 +35,10 @@ namespace YAMS.Redux.Data
                 .Property(c => c.Name)
                 .HasConversion<string>();
 
+            modelBuilder.Entity<MinecraftServer>()
+                .Property(c => c.ServerType)
+                .HasConversion<string>();
+
         }
 
         public virtual DbSet<MinecraftServer> Servers { get; set; }
