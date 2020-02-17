@@ -11,4 +11,8 @@
     <PackageReference Include="NLog" Version="4.6.8" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\YAMS.Redux.Data\YAMS.Redux.Data.csproj" />
+  </ItemGroup>
+
 </Project>

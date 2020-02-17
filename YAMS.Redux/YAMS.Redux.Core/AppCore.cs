@@ -1,9 +1,9 @@
 ﻿using NLog;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
-using System.Text;
+using YAMS.Redux.Core.Helpers;
+using YAMS.Redux.Data;
 
 namespace YAMS.Redux.Core
 {
@@ -13,7 +13,7 @@ namespace YAMS.Redux.Core
         private static Logger MyLog { get; set; }
 
         public static bool IsService { get; private set; }
-        public static string YAMSVersion
+        public static string Version
         {
             get
             {
@@ -24,13 +24,22 @@ namespace YAMS.Redux.Core
             }
         }
 
+        public static string AppName
+        {
+            get
+            {
+                return "YAMS.Redux";
+            }
+
+        }
+
         /// <summary>
         /// Main starting point for app/service.
         /// </summary>
         public static void Execute()
         {
             if (MyLog == null) MyLog = LogManager.GetCurrentClassLogger();
-            MyLog.Info("*** Execute of {YAMSVersion} ***", YAMSVersion);
+            MyLog.Info("*** Execute of {Version} ***", Version);
 
             // Check if we are a service
             Process cp = Process.GetCurrentProcess();
@@ -44,7 +53,7 @@ namespace YAMS.Redux.Core
             // Open connection to database.
             try
             {
-
+                DBHelper.Init(); // Check connection to our database.
             }
             catch (Exception ex)
             {
@@ -52,8 +61,15 @@ namespace YAMS.Redux.Core
                 throw; // We need to end here, no point with out data?
             }
 
+            // Check for old installfiles.
+            InstallHelper.DeleteOldFiles(FilesAndFoldersHelper.RootFolder);
 
+            // Check if this is the first time we run.
+            if (!DBHelper.GetSetting(YAMSSetting.FirstRunCompleted).GetValueAsBool) InstallHelper.FirstRun();
 
+            throw new NotImplementedException("Execute function not completed.");
+
+            // Done
             MyLog.Info("Start completed, YAMS.Redux is now running.");
 
         }

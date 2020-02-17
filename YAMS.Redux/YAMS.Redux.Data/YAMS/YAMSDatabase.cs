@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -9,22 +10,36 @@ namespace YAMS.Redux.Data
     public class YAMSDatabase : DbContext
     {
 
-        protected static string CONNECTIONNAME;
+        private static string CONNECTIONNAME;
 
         public YAMSDatabase(string ConnectionName = "YAMS")
         {
             CONNECTIONNAME = ConnectionName;
+
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            base.OnConfiguring(optionsBuilder);
+
             optionsBuilder.UseSqlServer(ConfigurationManager.ConnectionStrings[CONNECTIONNAME].ConnectionString,
             providerOptions => providerOptions.EnableRetryOnFailure());
+            // optionsBuilder.UseLoggerFactory(MyLoggerFactory);
+
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+
+            modelBuilder.Entity<YAMSSettingItem>()
+                .Property(c => c.Name)
+                .HasConversion<string>();
+
         }
 
         public virtual DbSet<MinecraftServer> Servers { get; set; }
         public virtual DbSet<MinecraftServerSetting> ServersConfig { get; set; }
-        public virtual DbSet<YAMSSetting> Settings { get; set; }
+        public virtual DbSet<YAMSSettingItem> Settings { get; set; }
         public virtual DbSet<Player> Players { get; set; }
         public virtual DbSet<MincraftManifestFile> ManifestFiles { get; set; }
         public DbSet<MinecraftJarFile> VersionFiles { get; set; }

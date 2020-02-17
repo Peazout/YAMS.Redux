@@ -11,7 +11,7 @@ namespace YAMS.Redux.Data
         [Key]
         [Column(Order = 0)]
         [StringLength(255)]
-        public string gName { get; set; }
+        public string Name { get; set; }
 
         [StringLength(255)]
         public string Value { get; set; }
