@@ -42,6 +42,7 @@ namespace YAMS.Redux.Data
         }
 
         public virtual DbSet<MinecraftServer> Servers { get; set; }
+        public virtual DbSet<ServerProcessID> ServerPID { get; set; }
         public virtual DbSet<MinecraftServerSetting> ServersConfig { get; set; }
         public virtual DbSet<YAMSSettingItem> Settings { get; set; }
         public virtual DbSet<Player> Players { get; set; }

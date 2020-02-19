@@ -4,8 +4,10 @@ using Microsoft.EntityFrameworkCore.Storage;
 using NLog;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using YAMS.Redux.Data;
+
 
 namespace YAMS.Redux.Core.Helpers
 {
@@ -73,9 +75,6 @@ namespace YAMS.Redux.Core.Helpers
         private static YAMSDatabase GetNewContext()
         {
             var DB = new YAMSDatabase(ConnectionName);
-#if DEBUG
-            // DB.Database.Log = SQL => Console.Write(SQL); // Update for core. Could be done in DBContext instead?
-#endif
             return DB;
         }
 
@@ -253,6 +252,43 @@ namespace YAMS.Redux.Core.Helpers
             }
         }
 
+        #endregion
+
+        #region Server ProcessId
+
+        public static List<ServerProcessID> GetActiveServerPID()
+        {
+            using (var db = GetNewContext())
+            {
+                return db.ServerPID.Include(p => p.Active == true).ToList();
+
+            }
+
+        }
+
+        public static void SetUnactiveServerPID(int pid)
+        {
+            using (var db = GetNewContext())
+            {
+                var row = db.Set<ServerProcessID>().First(p => p.PId == pid && p.Active == true);
+                row.Active = false;
+                db.SaveChanges();
+
+            }
+
+        }
+
+        public static void DeleteActiveServerPID(int pid)
+        {
+            using (var db = GetNewContext())
+            {
+                var row = db.Set<ServerProcessID>().First(p => p.PId == pid && p.Active == true);
+                db.ServerPID.Remove(row);
+                db.SaveChanges();
+
+            }
+
+        }
         #endregion
 
     }

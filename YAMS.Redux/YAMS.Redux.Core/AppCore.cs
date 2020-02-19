@@ -69,6 +69,9 @@ namespace YAMS.Redux.Core
             // And if it is not first run, still check if we have new settins to add or update
             InstallHelper.DefaultSettings();
 
+            // Check for left over minecraft servers running.
+            MincraftServerHelper.KillGhostServers();
+
 
 
 

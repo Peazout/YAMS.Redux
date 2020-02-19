@@ -2,6 +2,7 @@
 using NLog;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using YAMS.Redux.Data;
@@ -59,7 +60,7 @@ namespace YAMS.Redux.Core.Helpers
                 throw new FileNotFoundException(Message);
 
             }
-            
+
             // TODO: Read the property stuff in the server item.
             string json = File.ReadAllText(FilesAndFoldersHelper.YAMSPropertiesJson);
             JObject jProps = JObject.Parse(json);
@@ -90,6 +91,35 @@ namespace YAMS.Redux.Core.Helpers
             MyLog.Log(NLog.LogLevel.Info, "Created new MCServer with id => {ServerID}", server.Id);
 
             return server.Id;
+
+        }
+
+        /// <summary>
+        /// See if there are minecraft servers runnning that we are responsible for but not manage to shutdown
+        /// becuse of crach/restart.
+        /// </summary>
+        public static void KillGhostServers()
+        {
+            var list = DBHelper.GetActiveServerPID();
+
+            foreach (var row in list)
+            {
+
+                try
+                {
+                    Process.GetProcessById(row.PId).Kill();
+                    MyLog.Warn("Killed a overlocked processes {PId}", row.PId);
+                    // TODO: Verify it´s closed?
+                    // TODO: Just remove it.  DBHelper.DeleteActiveServerPID(row.PId);
+                    DBHelper.SetUnactiveServerPID(row.PId);
+
+                }
+                catch (Exception ex)
+                {
+                    MyLog.Warn(ex, "Process {pid} not killed", row.PId);
+                }
+
+            }
 
         }
 
