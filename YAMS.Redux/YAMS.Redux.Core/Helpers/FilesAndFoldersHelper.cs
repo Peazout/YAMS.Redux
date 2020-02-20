@@ -13,25 +13,17 @@ namespace YAMS.Redux.Core.Helpers
 
         public static string RootFolder => new FileInfo(System.Reflection.Assembly.GetExecutingAssembly().Location).DirectoryName;
 
-        //Folders
-        public static string LibFolder => Path.Combine(RootFolder, "lib");
-        public static string DBFolder => Path.Combine(RootFolder, "db");
-        public static string WebFolder => Path.Combine(RootFolder, "web");
-        public static string BackupFolder => Path.Combine(RootFolder, "Backups");
-
-        // Files
-        public static string WebInstallPackageFile => Path.Combine(RootFolder, "YAMS-Web.zip");
-        public static string YAMSPropertiesJson => Path.Combine(LibFolder, "properties.json");
-        public static string YAMSConfig => Path.Combine(LibFolder, "YAMS.config");
-        public static string CEFile => Path.Combine(DBFolder, "dbYAMS.sdf");
-
         // Web
-        public static string HttpMCVersionFile => "https://launchermeta.mojang.com/mc/game/version_manifest.json";
-        public static string HttpMCClient => "https://s3.amazonaws.com/MinecraftDownload/launcher/minecraft.jar";
-        // public static string HttpMCServerJar(string VersionId) { return "https://s3.amazonaws.com/Minecraft.Download/versions/" + VersionId + "/minecraft_server." + VersionId + ".jar"; }
+        public static string HttpMojang => "https://launchermeta.mojang.com/";
+        public static string HttpMojangManifest => "mc/game/version_manifest.json";       
         public static string HttpWebAdmin => "http://" + DBHelper.GetSetting(YAMSSetting.ListenIP).GetValue + ":" + DBHelper.GetSetting(YAMSSetting.ListenPortAdmin).GetValue;
 
         // Folders
+        public static string LibFolder => Path.Combine(RootFolder, "lib");
+        public static string DBFolder => Path.Combine(RootFolder, "db");
+        public static string WebFolder => Path.Combine(RootFolder, "web");
+        public static string JarFolder => Path.Combine(RootFolder, "jar");
+        public static string BackupFolder => Path.Combine(RootFolder, "Backups");
         public static string WebAdminFolder => Path.Combine(WebFolder, "admin");
         public static string WebTemplatesFolder => Path.Combine(WebFolder, "templates");
         public static string WebAssetsFolder => Path.Combine(WebFolder, "assets");
@@ -50,6 +42,10 @@ namespace YAMS.Redux.Core.Helpers
         public static string MCClientSystemFolder => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), @"config\systemprofile\AppData\Roaming\.minecraft\");
 
         // Files
+        public static string WebInstallPackageFile => Path.Combine(RootFolder, "YAMS-Web.zip");
+        public static string YAMSPropertiesJson => Path.Combine(LibFolder, "properties.json");
+        public static string YAMSConfig => Path.Combine(LibFolder, "YAMS.config");
+        public static string CEFile => Path.Combine(DBFolder, "dbYAMS.sdf");
         public static string WebAdminLoginFile => Path.Combine(WebAdminFolder, "login.html");
         public static string WebAdminIndexFile => Path.Combine(WebAdminFolder, "index.html");
         public static string PIDFile => Path.Combine(RootFolder, "pids.txt");
@@ -58,6 +54,7 @@ namespace YAMS.Redux.Core.Helpers
         public static string YAMSUpdater => Path.Combine(RootFolder, "YAMS.Updater.exe");
         public static string YAMSLibraryDll => Path.Combine(RootFolder, "YAMS-Library.dll");
         public static string YAMSService => Path.Combine(RootFolder, "YAMS-Service.exe");
+        public static string JarFile(MinecraftServerType servertype, int id) { return Path.Combine(JarFolder, servertype.ToString() + id.ToString() + ".jar"); }
         public static string MCServerArgsFile(int ServerId) { return Path.Combine(MCServerFolder(ServerId), "args.txt"); }
         public static string MCServerEulaFile(int ServerId) { return Path.Combine(MCServerFolder(ServerId), "eula.txt"); }
         public static string MCServerPropertyFile(int ServerId, bool IsUpdateName = false)
@@ -78,41 +75,6 @@ namespace YAMS.Redux.Core.Helpers
             }
             return Path.Combine(LibFolder, strName);
 
-        }
-        public static string LibServerJar(MinecraftServerType TypeOfServer, bool IsUpdateName = false)
-        {
-            string TmpStr = Path.Combine(new string[] { RootFolder, "lib", ServerJarName(TypeOfServer, IsUpdateName) });
-            return TmpStr;
-        }
-        public static string MCServerJar(MinecraftServerType TypeOfServer, int ServerID, bool IsUpdateInName = false)
-        {
-            string TmpStr = Path.Combine(new string[] { MCServerFolder(ServerID), ServerJarName(TypeOfServer, ServerID, IsUpdateInName) });
-            return TmpStr;
-        }
-        public static string ServerJarName(MinecraftServerType TypeOfServer, bool IsUpdateInName = false)
-        {
-            return ServerJarName(TypeOfServer, -1, IsUpdateInName);
-        }
-        public static string ServerJarName(MinecraftServerType TypeOfServer, int ServerID = -1, bool IsUpdateInName = false)
-        {
-            string JarFile = "";
-            switch (TypeOfServer)
-            {
-                case MinecraftServerType.Snapshot:
-                    JarFile = "minecraft_server_pre.jar";
-                    break;
-                case MinecraftServerType.Custom:
-                    JarFile = Convert.ToString(DBHelper.GetMCConfig("ServerCustomJAR", ServerID).Value);
-                    break;
-
-                case MinecraftServerType.Vanilla:
-                default:
-                    JarFile = "minecraft_server.jar";
-                    break;
-            }
-
-            if (IsUpdateInName) JarFile += ".UPDATE";
-            return JarFile;
         }
 
         #endregion

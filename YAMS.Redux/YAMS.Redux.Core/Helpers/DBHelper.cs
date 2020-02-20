@@ -291,6 +291,49 @@ namespace YAMS.Redux.Core.Helpers
         }
         #endregion
 
+        #region Versions
+
+        /// <summary>
+        /// Get the version from db for selected type of server.
+        /// </summary>
+        public static MinecraftJarFile GetVersionFile(string versionname, MinecraftServerType versiontype)
+        {
+            using (var db = GetNewContext())
+            {
+                return db.VersionFiles.SingleOrDefault(v =>
+                    v.VersionName == versionname
+                    &&
+                    v.TypeOfServer == versiontype
+                );
+
+            }
+
+        }
+
+        /// <summary>
+        /// Save a new version of a minecraft server jar.
+        /// </summary>
+        public static MinecraftJarFile SetVersionFile(string versionname, MinecraftServerType versiontype)
+        {
+            using (var db = GetNewContext())
+            {
+                var row = new MinecraftJarFile()
+                {
+                    VersionName = versionname,
+                    TypeOfServer = versiontype,
+                    Added = DateTime.Now,
+                };
+
+                db.VersionFiles.Add(row);
+                db.SaveChanges();
+
+                return row;
+            }
+
+        }
+
+        #endregion
+
     }
 
 }

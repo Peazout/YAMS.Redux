@@ -27,6 +27,18 @@ namespace YAMS.Redux.Data.Mojang
             return versions.Find(v => v.id == Latest.snapshot);
         }
 
+        public MojangVersion GetRelease(MinecraftServerType servertype)
+        {
+            switch (servertype)
+            {
+                case MinecraftServerType.Vanilla: return GetLatestRelease();
+                case MinecraftServerType.Snapshot: return GetLatestSnapshot();
+            }
+
+            return null;
+
+        }
+
     }
 
 

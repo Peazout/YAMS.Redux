@@ -12,14 +12,6 @@ namespace YAMS.Redux.Data
 
         public DateTime Added { get; set; }
 
-        [Required]
-        [StringLength(255)]
-        public string URL { get; set; }
-
-        [Required]
-        [StringLength(100)]
-        public string ETag { get; set; }
-
         public MinecraftServerType TypeOfServer { get; set; }
 
         [StringLength(100)]
