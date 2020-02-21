@@ -20,8 +20,8 @@ namespace YAMS.Redux.Data
         StoragePath,
         YAMSGuid,
         YAMSInstalledVersion,
-        EnablePublicSite,   
-        
+        EnablePublicSite,
+        ServerDefaultWait,
 
     }
 

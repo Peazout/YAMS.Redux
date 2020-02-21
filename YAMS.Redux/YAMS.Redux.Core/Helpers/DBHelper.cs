@@ -216,6 +216,20 @@ namespace YAMS.Redux.Core.Helpers
         #region Minecraft server
 
         /// <summary>
+        /// Get all our Minecraft servers.
+        /// </summary>
+        internal static List<MinecraftServer> GetServers()
+        {
+
+            using (var db = GetNewContext())
+            {
+                return db.Servers.ToList();
+
+            }
+
+        }
+
+        /// <summary>
         /// Adding server to database with default values.
         /// </summary>
         /// <returns>Serverid for the new server.</returns>
@@ -309,6 +323,23 @@ namespace YAMS.Redux.Core.Helpers
             }
 
         }
+
+        /// <summary>
+        /// Get the latest version for selected Minecraft servertype.
+        /// </summary>
+        public static MinecraftJarFile GetVersionFile(MinecraftServerType versiontype)
+        {
+            using (var db = GetNewContext())
+            {
+                return db.VersionFiles
+                    .OrderBy(v => v.Added)
+                    .FirstOrDefault(v => v.TypeOfServer == versiontype);
+
+            }
+
+        }
+
+
 
         /// <summary>
         /// Save a new version of a minecraft server jar.

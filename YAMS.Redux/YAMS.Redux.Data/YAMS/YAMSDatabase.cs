@@ -46,7 +46,7 @@ namespace YAMS.Redux.Data
         public virtual DbSet<MinecraftServerSetting> ServersConfig { get; set; }
         public virtual DbSet<YAMSSettingItem> Settings { get; set; }
         public virtual DbSet<Player> Players { get; set; }
-        public virtual DbSet<MincraftManifestFile> ManifestFiles { get; set; }
+        public virtual DbSet<MinecraftManifestFile> ManifestFiles { get; set; }
         public DbSet<MinecraftJarFile> VersionFiles { get; set; }
         public DbSet<ChattMessage> Chats { get; set; }
         public DbSet<JobSetting> Jobs { get; set; }

@@ -13,6 +13,14 @@ namespace YAMS.Redux.Data
         Custom
     }
 
+    [System.Flags]
+    public enum AutoUpdateFlags
+    {
+        NotSet = 0,
+        AutoUpdate = 1,
+        IfEmpty = 2,
+    }
+
     public partial class MinecraftServer
     {
         [Key]
@@ -27,8 +35,12 @@ namespace YAMS.Redux.Data
 
         public bool AutoStart { get; set; }
 
+        public AutoUpdateFlags AllowAutoUpdate { get; set; }
+
         [StringLength(100)]
         public MinecraftServerType ServerType { get; set; }
+
+        public int MinecraftJarFileId { get; set; }
 
     }
 

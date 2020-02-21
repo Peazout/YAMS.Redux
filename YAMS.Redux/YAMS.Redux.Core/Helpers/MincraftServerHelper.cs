@@ -5,16 +5,17 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
+using YAMS.Redux.Core.Entity;
 using YAMS.Redux.Data;
 using LogLevel = NLog.LogLevel;
 
 namespace YAMS.Redux.Core.Helpers
 {
 
-    public static class MincraftServerHelper
+    public static class MinecraftServerHelper
     {
 
-        public static Dictionary<int, MinecraftServer> Servers = new Dictionary<int, MinecraftServer> { };
+        public static Dictionary<int, MinecraftServerItem> Servers = new Dictionary<int, MinecraftServerItem> { };
 
         #region NLOG
 
@@ -45,6 +46,31 @@ namespace YAMS.Redux.Core.Helpers
 
         #endregion
 
+
+        public static void Init()
+        {
+            LoadServerList();
+            // Autostart the servers.
+            foreach (var server in Servers)
+            {
+                if (server.Value.IsAutoUpdateSet) server.Value.Start();
+
+            }
+
+        }
+
+        /// <summary>
+        /// Load our list of server from the db and create objects to run the servers.
+        /// </summary>
+        private static void LoadServerList()
+        {
+            foreach (var row in DBHelper.GetServers())
+            {
+                var server = new MinecraftServerItem();
+
+            }
+
+        }
 
         /// <summary>
         /// Create new Minecraft server.

@@ -47,7 +47,7 @@ namespace YAMS.Redux.Core.Helpers
         /// </summary>
         public static void CheckForUpdates()
         {
-            
+
             if (Paused)
             {
                 MyLog.Trace("Update functions are paused.");
@@ -80,12 +80,29 @@ namespace YAMS.Redux.Core.Helpers
                 web.GetJarFile(download.downloads.server.url, filename);
 
             }
-            
+
         }
 
 
         public static void UpdateServers()
         {
+
+            foreach (var sv in MinecraftServerHelper.Servers)
+            {
+                
+                if (!sv.Value.IsAutoUpdateSet) break;
+                MyLog.Info("Checking if server {title} needs update.", sv.Value.Data.Name);
+
+                // What is the latests
+                var ver = DBHelper.GetVersionFile(sv.Value.Data.ServerType);
+                if (sv.Value.Data.MinecraftJarFileId == ver.Id) { MyLog.Info("Allready running the latest version."); break; }
+                if (!sv.Value.IsReadyForRestart()) { MyLog.Warn("Server not ready for restart."); break; }
+
+                sv.Value.Restart(DBHelper.GetSetting(YAMSSetting.ServerDefaultWait).GetValueAsInt);
+                               
+            }
+
+            MyLog.Info("Finished update check");
 
         }
 

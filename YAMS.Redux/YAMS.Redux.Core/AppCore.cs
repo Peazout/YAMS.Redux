@@ -70,9 +70,13 @@ namespace YAMS.Redux.Core
             InstallHelper.DefaultSettings();
 
             // Check for left over minecraft servers running.
-            MincraftServerHelper.KillGhostServers();
+            MinecraftServerHelper.KillGhostServers();
 
+            UpdateHelper.Init();
+            UpdateHelper.CheckForUpdates();
 
+            // Now start servers
+            MinecraftServerHelper.Init();
 
 
             throw new NotImplementedException("Execute function not completed.");

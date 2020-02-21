@@ -5,7 +5,7 @@ using System.Text;
 
 namespace YAMS.Redux.Data
 {
-    public class MincraftManifestFile
+    public class MinecraftManifestFile
     {
 
         [Key]
