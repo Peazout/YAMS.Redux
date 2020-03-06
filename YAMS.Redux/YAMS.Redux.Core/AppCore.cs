@@ -86,6 +86,16 @@ namespace YAMS.Redux.Core
 
         }
 
+
+        /// <summary>
+        /// Whatever Executegets going, we teardown.
+        /// </summary>
+        public static void End()
+        {
+            throw new NotImplementedException("End function not completed.");
+
+        }
+
     }
 
 }

@@ -98,7 +98,7 @@ namespace YAMS.Redux.Core.Helpers
                 if (sv.Value.Data.MinecraftJarFileId == ver.Id) { MyLog.Info("Allready running the latest version."); break; }
                 if (!sv.Value.IsReadyForRestart()) { MyLog.Warn("Server not ready for restart."); break; }
 
-                sv.Value.Restart(DBHelper.GetSetting(YAMSSetting.ServerDefaultWait).GetValueAsInt);
+                sv.Value.Restart();
                                
             }
 

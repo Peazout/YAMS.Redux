@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
-using NLog;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -20,11 +19,11 @@ namespace YAMS.Redux.Core.Helpers
         /// <summary>
         /// Get our logger, if null get the current one.
         /// </summary>
-        private static Logger MyLog
+        private static NLog.Logger MyLog
         {
             get
             {
-                if (_MyLog == null) { _MyLog = LogManager.GetCurrentClassLogger(); }
+                if (_MyLog == null) { _MyLog = NLog.LogManager.GetCurrentClassLogger(); }
                 return _MyLog;
             }
 
@@ -33,9 +32,9 @@ namespace YAMS.Redux.Core.Helpers
         /// <summary>
         /// Return a logevent for nlog.
         /// </summary>
-        private static LogEventInfo GetLogEvent(NLog.LogLevel Lvl, string Message, int ServerId = -1)
+        private static NLog.LogEventInfo GetLogEvent(NLog.LogLevel Lvl, string Message, int ServerId = -1)
         {
-            LogEventInfo theEvent = new LogEventInfo(Lvl, MyLog.Name, Message);
+            NLog.LogEventInfo theEvent = new NLog.LogEventInfo(Lvl, MyLog.Name, Message);
             if (ServerId != -1) theEvent.Properties["ServerId"] = ServerId;
             // theEvent.LoggerName = MyLog.Name;
 
@@ -359,6 +358,53 @@ namespace YAMS.Redux.Core.Helpers
                 db.SaveChanges();
 
                 return row;
+            }
+
+        }
+
+        #endregion
+        
+        #region Logs
+
+        /// <summary>
+        /// Return logrows recorded with NLog with desc Logged, desc Id.
+        /// </summary>
+        public static List<LogRow> GetLog(int startindex = -1, int numberofrows = 500, LogLevel level = LogLevel.All, int serverid = -1)
+        {
+            using (var db = GetNewContext())
+            {
+                var query = db.YAMSLog.AsQueryable();
+                if (serverid != -1) query = query.Where(x => x.ServerId == serverid);
+                if (startindex > -1) query = query.Where(x => x.Id > startindex);
+                if (level != LogLevel.All) query = query.Where(x => x.Level == level.ToString());
+                query = query.OrderByDescending(x => x.Logged).OrderByDescending(x => x.Id);
+                query = query.Take(numberofrows);
+                // Preform the query.
+                return query.ToList();
+
+            }
+            
+        }
+
+        #endregion
+
+        #region Jobs
+
+        /// <summary>
+        /// Return all jobs to be done with in the hour and minute requested.
+        /// </summary>
+        public static IEnumerable<JobSetting> GetJobs(int hour, int minute)
+        {
+            using (var db = GetNewContext())
+            {
+
+                var query = db.Jobs;
+                return query.Where(j =>
+                (j.Hour == -1 && j.Minute == minute)
+                ||
+                (j.Hour == hour && j.Minute == minute))
+                .ToList();
+
             }
 
         }

@@ -9,13 +9,46 @@ namespace YAMS.Redux.Core.Helpers
     public class FilesAndFoldersHelper
     {
 
+        #region NLOG
+
+        /// <summary>
+        /// Get our logger, if null get the current one.
+        /// </summary>
+        private static NLog.Logger MyLog
+        {
+            get
+            {
+                if (_MyLog == null) { _MyLog = NLog.LogManager.GetCurrentClassLogger(); }
+                return _MyLog;
+            }
+
+        }
+        private static NLog.Logger _MyLog;
+        /// <summary>
+        /// Return a logevent for nlog.
+        /// </summary>
+        /// <param name="Lvl"></param>
+        /// <param name="Message"></param>
+        /// <param name="ServerId"></param>
+        /// <returns></returns>
+        private static NLog.LogEventInfo GetLogEvent(NLog.LogLevel Lvl, string Message, int ServerId = -1)
+        {
+            NLog.LogEventInfo theEvent = new NLog.LogEventInfo(Lvl, MyLog.Name, Message);
+            if (ServerId != -1) theEvent.Properties["ServerId"] = ServerId;
+            // theEvent.LoggerName = MyLog.Name;
+
+            return theEvent;
+        }
+
+        #endregion
+
         #region Properties
 
         public static string RootFolder => new FileInfo(System.Reflection.Assembly.GetExecutingAssembly().Location).DirectoryName;
 
         // Web
         public static string HttpMojang => "https://launchermeta.mojang.com/";
-        public static string HttpMojangManifest => "mc/game/version_manifest.json";       
+        public static string HttpMojangManifest => "mc/game/version_manifest.json";
         public static string HttpWebAdmin => "http://" + DBHelper.GetSetting(YAMSSetting.ListenIP).GetValue + ":" + DBHelper.GetSetting(YAMSSetting.ListenPortAdmin).GetValue;
 
         // Folders
@@ -74,6 +107,42 @@ namespace YAMS.Redux.Core.Helpers
                 default: strName = "mcServerRelease.json"; break;
             }
             return Path.Combine(LibFolder, strName);
+
+        }
+
+        #endregion
+
+        #region Copy
+
+        public static void Copy(string sourceDirectory, string targetDirectory)
+        {
+            DirectoryInfo diSource = new DirectoryInfo(sourceDirectory);
+            DirectoryInfo diTarget = new DirectoryInfo(targetDirectory);
+
+            CopyAll(diSource, diTarget);
+        }
+
+        public static void CopyAll(DirectoryInfo source, DirectoryInfo target)
+        {
+            // Check if the target directory exists, if not, create it.
+            if (Directory.Exists(target.FullName) == false)
+            {
+                Directory.CreateDirectory(target.FullName);
+            }
+
+            // Copy each file into it's new directory.
+            foreach (FileInfo fi in source.GetFiles())
+            {
+                MyLog.Trace(@"Copying {0}\{1}", target.FullName, fi.Name);
+                fi.CopyTo(Path.Combine(target.ToString(), fi.Name), true);
+            }
+
+            // Copy each subdirectory using recursion.
+            foreach (DirectoryInfo diSourceSubDir in source.GetDirectories())
+            {
+                DirectoryInfo nextTargetSubDir = target.CreateSubdirectory(diSourceSubDir.Name);
+                CopyAll(diSourceSubDir, nextTargetSubDir);
+            }
 
         }
 

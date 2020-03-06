@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
 using YAMS.Redux.Core.Helpers;
 using YAMS.Redux.Data;
 
@@ -18,6 +19,27 @@ namespace YAMS.Redux.Core.Entity
         public bool Running { get; set; }
 
         public Process JavaRunningMinecraft { get; set; }
+
+        public bool HasChanged { get; set; }
+
+        public int ServerId => Data.Id;
+
+
+        private int WaitTime
+        {
+            get
+            {
+                int t = 1000;
+                try
+                {
+                    t = DBHelper.GetSetting(YAMSSetting.ServerDefaultWait).GetValueAsInt;
+                }
+                catch { }
+                return t;
+
+            }
+
+        }
 
         #region NLOG
 
@@ -77,16 +99,17 @@ namespace YAMS.Redux.Core.Entity
             }
         }
 
-        
 
-        public void Restart(int waittime)
+
+        public void Restart()
         {
             if (Running)
             {
                 MyLog.Log(GetLogEvent(NLog.LogLevel.Warn, "Restarting server.", Data.Id));
                 Stop();
-                System.Threading.Thread.Sleep(waittime);
+                System.Threading.Thread.Sleep(WaitTime);
                 Start();
+
             }
 
 
@@ -159,30 +182,30 @@ namespace YAMS.Redux.Core.Entity
         /// <summary>
         /// Command to Minecraft server.
         /// </summary>
-        public void Save(int waittime)
+        public void Save()
         {
             Send("save-all");
             //Generally this needs a long wait
-            System.Threading.Thread.Sleep(waittime);
+            Thread.Sleep(WaitTime);
 
         }
         /// <summary>
         /// Command to Minecraft server.
         /// </summary>
-        public void EnableSaving(int waittime)
+        public void EnableSaving()
         {
             Send("save-on");
             //Generally this needs a long wait
-            System.Threading.Thread.Sleep(waittime);
+            Thread.Sleep(WaitTime);
         }
         /// <summary>
         /// Command to Minecraft server.
         /// </summary>
-        public void DisableSaving(int waittime)
+        public void DisableSaving()
         {
             Send("save-off");
             //Generally this needs a long wait
-            System.Threading.Thread.Sleep(waittime);
+            Thread.Sleep(WaitTime);
         }
         /// <summary>
         /// Command to Minecraft server.

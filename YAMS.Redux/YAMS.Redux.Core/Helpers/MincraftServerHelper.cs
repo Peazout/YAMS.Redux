@@ -53,7 +53,7 @@ namespace YAMS.Redux.Core.Helpers
             // Autostart the servers.
             foreach (var server in Servers)
             {
-                if (server.Value.IsAutoUpdateSet) server.Value.Start();
+                if (server.Value.Data.AutoStart) server.Value.Start();
 
             }
 

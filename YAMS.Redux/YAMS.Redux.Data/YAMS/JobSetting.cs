@@ -14,7 +14,7 @@ namespace YAMS.Redux.Data
         Update = 3,
     }
 
-    public class JobSetting
+    public partial class JobSetting
     {
         [Key]
         public int Id { get; set; }
@@ -22,14 +22,26 @@ namespace YAMS.Redux.Data
         [Required]
         public JobAction Action { get; set; }
 
-        public string JobParams { get; set; }
+        public string Config { get; set; }
 
-        public int? JobHour { get; set; }
+        public int Hour { get; set; }
 
-        public int? JobMinute { get; set; }
+        public int Minute { get; set; }
 
-        public int? ServerId { get; set; }
+        public int ServerId { get; set; }
 
+    }
+
+    public class JobSettingConfig
+    {
+        public JobSettingConfigClearBackup ClearBackup { get; set; }
+
+    }
+
+    public class JobSettingConfigClearBackup
+    {
+        public int Period { get; set; }
+        public int Value { get; set; }
     }
 
 }
