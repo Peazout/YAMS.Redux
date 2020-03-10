@@ -22,7 +22,7 @@ namespace YAMS.Redux.Data
         [Required]
         public JobAction Action { get; set; }
 
-        public string Config { get; set; }
+        public string Args { get; set; }
 
         public int Hour { get; set; }
 
@@ -30,18 +30,6 @@ namespace YAMS.Redux.Data
 
         public int ServerId { get; set; }
 
-    }
-
-    public class JobSettingConfig
-    {
-        public JobSettingConfigClearBackup ClearBackup { get; set; }
-
-    }
-
-    public class JobSettingConfigClearBackup
-    {
-        public int Period { get; set; }
-        public int Value { get; set; }
     }
 
 }

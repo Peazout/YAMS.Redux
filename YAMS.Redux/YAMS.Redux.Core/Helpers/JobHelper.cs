@@ -83,8 +83,8 @@ namespace YAMS.Redux.Core.Helpers
 
             foreach (var row in jobs)
             {
-
-                if (row.ServerId != null)
+                row.ParseArgs();
+                if (row.ServerId != -1)
                 {
                     var server = MinecraftServerHelper.Servers[Convert.ToInt32(row.ServerId)];
                     SelectAndPreformJob(row, server);
@@ -105,11 +105,12 @@ namespace YAMS.Redux.Core.Helpers
                     break;
 
                 case JobAction.ClearBackup:
-                    BackupHelper.ClearBackups(server);
+                    BackupHelper.ClearBackups(server,row.Config.ClearBackup);
                     break;
 
                 case JobAction.Update:
-
+                    UpdateHelper.CheckForUpdates(); // Get the latestsversions
+                    UpdateHelper.UpdateServers();
                     break;
 
                 default:

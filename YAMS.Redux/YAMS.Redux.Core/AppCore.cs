@@ -78,6 +78,8 @@ namespace YAMS.Redux.Core
             // Now start servers
             MinecraftServerHelper.Init();
 
+            // Start the jobs thread.
+            JobHelper.Init();
 
             throw new NotImplementedException("Execute function not completed.");
 

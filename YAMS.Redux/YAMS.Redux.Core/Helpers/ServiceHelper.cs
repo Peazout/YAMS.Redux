@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ServiceProcess;
 using System.Text;
+using System.Configuration.Install;
 
 namespace YAMS.Redux.Core.Helpers
 {

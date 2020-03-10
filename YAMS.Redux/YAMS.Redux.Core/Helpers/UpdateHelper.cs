@@ -87,6 +87,12 @@ namespace YAMS.Redux.Core.Helpers
         public static void UpdateServers()
         {
 
+            if (Paused)
+            {
+                MyLog.Trace("Update functions are paused.");
+                return;
+            }
+
             foreach (var sv in MinecraftServerHelper.Servers)
             {
                 
@@ -95,11 +101,20 @@ namespace YAMS.Redux.Core.Helpers
 
                 // What is the latests
                 var ver = DBHelper.GetVersionFile(sv.Value.Data.ServerType);
-                if (sv.Value.Data.MinecraftJarFileId == ver.Id) { MyLog.Info("Allready running the latest version."); break; }
+                if (sv.Value.Data.MinecraftJarFileId == ver.Id) { MyLog.Log(GetLogEvent(NLog.LogLevel.Info, "Allready running the latest version.", sv.Value.Data.Id)); break; }
+                else
+                {
+                    MyLog.Log(GetLogEvent(NLog.LogLevel.Warn, "Update jar version from " + sv.Value.Data.MinecraftJarFileId  + " to " + ver.Id + ".", sv.Value.Data.Id));
+                    sv.Value.Data.MinecraftJarFileId = ver.Id;
+                    DBHelper.UpdateServer(sv.Value.Data);
+                }
+                // Can we also restart server so it can run the new version.
                 if (!sv.Value.IsReadyForRestart()) { MyLog.Warn("Server not ready for restart."); break; }
-
-                sv.Value.Restart();
-                               
+                else
+                {
+                    sv.Value.Restart();
+                }
+                                               
             }
 
             MyLog.Info("Finished update check");

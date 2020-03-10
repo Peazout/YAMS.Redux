@@ -85,8 +85,9 @@ namespace YAMS.Redux.Core.Helpers
 
         }
 
-        internal static void ClearBackups(MinecraftServerItem server)
+        internal static void ClearBackups(MinecraftServerItem server, Data.JobSettingConfigClearBackup config)
         {
+
             throw new NotImplementedException();
         }
     }

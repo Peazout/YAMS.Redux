@@ -259,11 +259,26 @@ namespace YAMS.Redux.Core.Helpers
         /// </summary>
         public static MinecraftServer GetServer(int serverid)
         {
-            using (var DBContext = GetNewContext())
+            using (var db = GetNewContext())
             {
-                return (from s in DBContext.Servers where s.Id == serverid select s).SingleOrDefault();
+                return (from s in db.Servers where s.Id == serverid select s).SingleOrDefault();
             }
         }
+
+        /// <summary>
+        /// Save changes to a minecraft server in db.
+        /// </summary>
+        /// <param name="server"></param>
+        public static void UpdateServer(MinecraftServer server)
+        {
+            using (var db = GetNewContext())
+            {
+                db.Servers.Update(server);
+                db.SaveChanges();
+            }
+
+        }
+
 
         #endregion
 

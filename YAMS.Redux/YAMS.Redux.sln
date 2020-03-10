@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29709.97
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YAMS.Redux.Core", "YAMS.Redux.Core\YAMS.Redux.Core.csproj", "{4F058859-7654-44A4-A5A0-3B679D0AAC53}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YAMS.Redux.Core", "YAMS.Redux.Core\YAMS.Redux.Core.csproj", "{4F058859-7654-44A4-A5A0-3B679D0AAC53}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YAMS.Redux.Data", "YAMS.Redux.Data\YAMS.Redux.Data.csproj", "{D446ECD3-A925-473E-B36C-972C83848668}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YAMS.Redux.Data", "YAMS.Redux.Data\YAMS.Redux.Data.csproj", "{D446ECD3-A925-473E-B36C-972C83848668}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YAMS.Redux.GUI", "YAMS.Redux.GUI\YAMS.Redux.GUI.csproj", "{7A07DBF5-3775-4585-8225-B07E116476D2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YAMS.Redux.GUI", "YAMS.Redux.GUI\YAMS.Redux.GUI.csproj", "{7A07DBF5-3775-4585-8225-B07E116476D2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YAMS.Redux.Service", "YAMS.Redux.Service\YAMS.Redux.Service.csproj", "{A9EC02F2-78C5-4A59-AE19-5307FAD2E173}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YAMS.Redux.Service", "YAMS.Redux.Service\YAMS.Redux.Service.csproj", "{5112996C-FB83-49D7-A001-E1BE25EB108A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +29,10 @@ Global
 		{7A07DBF5-3775-4585-8225-B07E116476D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7A07DBF5-3775-4585-8225-B07E116476D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7A07DBF5-3775-4585-8225-B07E116476D2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A9EC02F2-78C5-4A59-AE19-5307FAD2E173}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A9EC02F2-78C5-4A59-AE19-5307FAD2E173}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A9EC02F2-78C5-4A59-AE19-5307FAD2E173}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A9EC02F2-78C5-4A59-AE19-5307FAD2E173}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5112996C-FB83-49D7-A001-E1BE25EB108A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5112996C-FB83-49D7-A001-E1BE25EB108A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5112996C-FB83-49D7-A001-E1BE25EB108A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5112996C-FB83-49D7-A001-E1BE25EB108A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
