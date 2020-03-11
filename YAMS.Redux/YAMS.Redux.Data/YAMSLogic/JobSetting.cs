@@ -35,9 +35,68 @@ namespace YAMS.Redux.Data
     public class JobSettingConfigClearBackup
     {
         public bool useExtendedMethod { get; set; }
-        public int Period { get; set; }
-        public int Value { get; set; }
+
+        public JobSettingConfigPeriod Period { get; set; }
+
     }
 
+    public class JobSettingConfigPeriod
+    {
+        public string Name { get; set; }
+        public int Value { get; set; }
+
+        /// <summary>
+        /// Calculate the date from our values.
+        /// </summary>
+        /// <returns></returns>
+        public DateTime GetDate()
+        {
+            DateTime DateLimit = DateTime.Now;
+            switch (Name.ToLower())
+            {
+                case "yy":
+                    DateLimit = DateLimit.AddYears(-Value);
+                    break;
+                case "mm":
+                    DateLimit = DateLimit.AddMonths(-Value);
+                    break;
+                case "ww":
+                    DateLimit = DateLimit.AddDays(-(Value * 7));
+                    break;
+                case "dd":
+                    DateLimit = DateLimit.AddDays(-Value);
+                    break;
+                default:
+                    // TODO: Something else than this?
+                    throw new NotImplementedException("Unknown period for name: " + Name + ", using default days.");
+
+            }
+
+            return DateLimit;
+
+        }
+
+        /// <summary>
+        /// Get a list of dates from now back to the end date.
+        /// </summary>
+        /// <param name="EndTime"></param>
+        /// <returns></returns>
+        public List<DateTime> GetDates(DateTime EndTime)
+        {
+
+            DateTime check = DateTime.Now.AddDays(-1);
+            List<DateTime> dates = new List<DateTime>();
+
+            do
+            {
+                dates.Add(check);
+                check = check.AddDays(-1);
+            } while (check.Subtract(EndTime).TotalDays >= 0);
+
+            return dates;
+
+        }
+
+    }
 
 }

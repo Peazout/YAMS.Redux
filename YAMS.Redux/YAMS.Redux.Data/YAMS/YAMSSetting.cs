@@ -22,6 +22,7 @@ namespace YAMS.Redux.Data
         YAMSInstalledVersion,
         EnablePublicSite,
         ServerDefaultWait,
+        CultureAndCountry,
 
     }
 

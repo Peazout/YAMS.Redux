@@ -1,6 +1,7 @@
 ﻿using NLog;
 using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.Reflection;
 using YAMS.Redux.Core.Helpers;
 using YAMS.Redux.Data;
@@ -11,6 +12,8 @@ namespace YAMS.Redux.Core
     {
 
         private static Logger MyLog { get; set; }
+
+        public static CultureInfo i18t => new CultureInfo(DBHelper.GetSetting(Data.YAMSSetting.CultureAndCountry).ToString());
 
         public static bool IsService { get; private set; }
         public static string Version
@@ -32,6 +35,8 @@ namespace YAMS.Redux.Core
             }
 
         }
+
+
 
         /// <summary>
         /// Main starting point for app/service.

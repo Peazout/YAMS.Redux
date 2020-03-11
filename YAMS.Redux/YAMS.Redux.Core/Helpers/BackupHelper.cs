@@ -2,8 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using YAMS.Redux.Core.Entity;
+using YAMS.Redux.Data;
 
 namespace YAMS.Redux.Core.Helpers
 {
@@ -85,11 +85,81 @@ namespace YAMS.Redux.Core.Helpers
 
         }
 
-        internal static void ClearBackups(MinecraftServerItem server, Data.JobSettingConfigClearBackup config)
+        public static void ClearBackups(MinecraftServerItem server, Data.JobSettingConfigClearBackup config)
+        {
+            MyLog.Log(GetLogEvent(NLog.LogLevel.Info, "Clearing backups older than " +  config.Period.GetDate().ToString("yyyy-MM-dd HH:mm:ss", AppCore.i18t), server.Data.Id));
+
+            if (config.useExtendedMethod) { ClearBackupsExt(server, config); return; }
+            ClearBackupsStd(server, config);
+
+        }
+
+        private static void ClearBackupsStd(MinecraftServerItem server, JobSettingConfigClearBackup config)
+        {
+            string[] files = Directory.GetFiles(FilesAndFoldersHelper.MCServerBackupFolder(server.Data.Id));
+            DateTime endTime = config.Period.GetDate();
+            int Count = 0;
+
+            foreach (string file in files)
+            {
+                FileInfo fi = new FileInfo(file);
+                if (fi.CreationTime < endTime)
+                {
+                    MyLog.Log(GetLogEvent(NLog.LogLevel.Debug, "Delete old backup file: " + fi.Name, server.Data.Id));
+                    Count++;
+                    fi.Delete();
+                }
+
+            }
+            MyLog.Log(GetLogEvent(NLog.LogLevel.Info, "Removed " + Count + " old backupfiles.", server.Data.Id));
+
+        }
+
+        private static void ClearBackupsExt(MinecraftServerItem server, JobSettingConfigClearBackup config)
         {
 
-            throw new NotImplementedException();
+            string[] files = Directory.GetFiles(FilesAndFoldersHelper.MCServerBackupFolder(server.Data.Id));
+            DateTime endTime = config.Period.GetDate();
+            int Count = 0;
+
+            List<DateTime> Dates = config.Period.GetDates(endTime);
+
+            foreach (DateTime Date in Dates)
+            {
+                FileInfo keep = null;
+                foreach (string file in files)
+                {
+                    FileInfo fi = new FileInfo(file);
+
+                    if (IsFileWithInDate(Date, fi))
+                    {
+                        if (keep != null && fi.CreationTime > keep.CreationTime)
+                        {
+                            MyLog.Log(GetLogEvent(NLog.LogLevel.Debug, "Delete old backup file becuse newer file exists for that day, delete of : " + keep.Name, server.Data.Id));
+                            keep.Delete();
+                            keep = fi;
+                            Count++;
+                        }
+                        else if (keep == null)
+                        {
+                            keep = fi;
+
+                        }
+                    }
+                }
+
+            }
+            MyLog.Log(GetLogEvent(NLog.LogLevel.Info, "Removed " + Count + " old backupfiles.", server.Data.Id));
+
         }
+
+        private static bool IsFileWithInDate(DateTime Date, FileInfo fi)
+        {
+            if (fi.CreationTime.ToShortDateString() == Date.ToShortDateString()) return true;
+            return false;
+
+        }
+
     }
 
 }

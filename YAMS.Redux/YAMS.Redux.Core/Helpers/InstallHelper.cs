@@ -118,6 +118,7 @@ namespace YAMS.Redux.Core.Helpers
                     DBHelper.SetSetting(YAMSSetting.EnablePublicSite, "true");
                     DBHelper.SetSetting(YAMSSetting.YAMSGuid, Guid.NewGuid().ToString());
                     DBHelper.SetSetting(YAMSSetting.ServerDefaultWait, "10000");
+                    DBHelper.SetSetting(YAMSSetting.CultureAndCountry, "sv-SE");
 
                     // DBHelper.SetSetting("EnableTelnet", "false");
                     // DBHelper.SetSetting("TelnetPort", "56553");
