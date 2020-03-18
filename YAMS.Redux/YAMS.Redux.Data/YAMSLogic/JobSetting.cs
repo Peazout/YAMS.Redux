@@ -1,8 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
-using Newtonsoft.Json;
 
 namespace YAMS.Redux.Data
 {
@@ -29,6 +27,8 @@ namespace YAMS.Redux.Data
     {
 
         public JobSettingConfigClearBackup ClearBackup { get; set; }
+        public JobSettingConfigClearlogs Clearlogs { get; set; }
+        public JobSettingConfigCommand Command { get; set; }
 
     }
 
@@ -38,6 +38,18 @@ namespace YAMS.Redux.Data
 
         public JobSettingConfigPeriod Period { get; set; }
 
+    }
+
+    public class JobSettingConfigClearlogs
+    {
+
+        public JobSettingConfigPeriod Period { get; set; }
+
+    }
+
+    public class JobSettingConfigCommand
+    {
+        public string Args { get; set; }
     }
 
     public class JobSettingConfigPeriod

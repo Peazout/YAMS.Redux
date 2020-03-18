@@ -77,7 +77,8 @@ namespace YAMS.Redux.Core.Helpers
             catch (Exception ex)
             {
                 MyLog.Error(ex, "Error when geting jobs from DB.");
-                return;
+                throw;
+
             }
 
 
@@ -111,6 +112,30 @@ namespace YAMS.Redux.Core.Helpers
                 case JobAction.Update:
                     UpdateHelper.CheckForUpdates(); // Get the latestsversions
                     UpdateHelper.UpdateServers();
+                    break;
+
+                case JobAction.Clearlogs:
+                    DBHelper.DeleteLogRows(row.Config.Clearlogs.Period.GetDate());
+                    break;
+
+                case JobAction.MinecraftClearlogs:
+                    throw new NotImplementedException("Job for clearing out minecraft server logfiles is not implemented.");
+                    break;
+
+                case JobAction.MinecraftCommand:
+                    server.Send(row.Config.Command.Args);
+                    break;
+
+                case JobAction.MinecraftRestart:
+                    server.Restart();
+                    break;
+
+                case JobAction.MinecraftStart:
+                    server.Start();
+                    break;
+
+                case JobAction.MinecraftStop:
+                    server.Stop();
                     break;
 
                 default:

@@ -401,6 +401,22 @@ namespace YAMS.Redux.Core.Helpers
             
         }
 
+        /// <summary>
+        /// Clearout logrows that was logged before given date.
+        /// </summary>
+        public static void DeleteLogRows(DateTime before)
+        {
+
+            using (var db = GetNewContext())
+            {
+                var logrows = db.YAMSLog.Select(l => l.Logged >= before).ToArray();
+                db.RemoveRange(logrows);
+                db.SaveChanges();
+                    
+            }
+            
+        }
+
         #endregion
 
         #region Jobs

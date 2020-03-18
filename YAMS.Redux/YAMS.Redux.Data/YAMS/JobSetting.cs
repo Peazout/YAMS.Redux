@@ -12,6 +12,12 @@ namespace YAMS.Redux.Data
         Backup = 1,
         ClearBackup = 2,
         Update = 3,
+        Clearlogs = 4,
+        MinecraftStart = 5,
+        MinecraftStop = 6,
+        MinecraftRestart = 7,
+        MinecraftClearlogs = 8,
+        MinecraftCommand = 9,
     }
 
     public partial class JobSetting
