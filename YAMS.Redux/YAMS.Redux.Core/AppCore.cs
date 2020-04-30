@@ -86,6 +86,8 @@ namespace YAMS.Redux.Core
             // Start the jobs thread.
             JobHelper.Init();
 
+            // Start the webserver for user interface.
+
             throw new NotImplementedException("Execute function not completed.");
 
             // Done

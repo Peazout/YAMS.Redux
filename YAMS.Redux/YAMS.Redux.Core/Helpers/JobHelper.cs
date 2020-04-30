@@ -61,9 +61,6 @@ namespace YAMS.Redux.Core.Helpers
             int minutes = datNow.Minute;
             int hour = datNow.Hour;
 
-            // TODO: Should we check DNS name?
-            // if (intMinutes % 5 == 0 && YAMSDataHelper.GetSettingYAMS("DNSName") != "") NetworkHelper.UpdateDNS();
-
             IEnumerable<JobSetting> jobs = null;
             try
             {
@@ -80,8 +77,7 @@ namespace YAMS.Redux.Core.Helpers
                 throw;
 
             }
-
-
+            
             foreach (var row in jobs)
             {
                 row.ParseArgs();

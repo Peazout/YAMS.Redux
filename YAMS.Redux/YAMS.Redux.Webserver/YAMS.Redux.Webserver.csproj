@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\YAMS.Redux.Core\YAMS.Redux.Core.csproj" />
+    <ProjectReference Include="..\YAMS.Redux.Data\YAMS.Redux.Data.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ServiceModel\" />
+  </ItemGroup>
+
+</Project>
