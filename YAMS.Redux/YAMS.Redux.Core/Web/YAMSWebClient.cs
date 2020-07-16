@@ -59,7 +59,7 @@ namespace YAMS.Redux.Core.Web
             } 
             catch (Exception ex)
             {
-                
+                MyLog.Error(ex);
             }
 
             return null;
@@ -76,7 +76,7 @@ namespace YAMS.Redux.Core.Web
             }
             catch (Exception ex)
             {
-
+                MyLog.Error(ex);
             }
 
             return null;
@@ -92,7 +92,7 @@ namespace YAMS.Redux.Core.Web
             }
             catch (Exception ex)
             {
-
+                MyLog.Error(ex);
             }
 
         }

@@ -13,5 +13,6 @@ namespace YAMS.Redux.GUI
     /// </summary>
     public partial class App : Application
     {
+
     }
 }
