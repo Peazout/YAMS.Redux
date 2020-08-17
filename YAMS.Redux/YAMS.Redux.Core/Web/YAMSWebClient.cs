@@ -59,10 +59,8 @@ namespace YAMS.Redux.Core.Web
             } 
             catch (Exception ex)
             {
-                
+                throw;
             }
-
-            return null;
 
         }
 
@@ -76,10 +74,8 @@ namespace YAMS.Redux.Core.Web
             }
             catch (Exception ex)
             {
-
+                throw;
             }
-
-            return null;
 
         }
 
@@ -92,7 +88,7 @@ namespace YAMS.Redux.Core.Web
             }
             catch (Exception ex)
             {
-
+                throw;
             }
 
         }

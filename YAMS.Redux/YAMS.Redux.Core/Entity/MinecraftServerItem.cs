@@ -34,7 +34,7 @@ namespace YAMS.Redux.Core.Entity
                 {
                     t = DBHelper.GetSetting(YAMSSetting.ServerDefaultWait).GetValueAsInt;
                 }
-                catch { }
+                catch { throw; }
                 return t;
 
             }
