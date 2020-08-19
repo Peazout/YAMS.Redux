@@ -1,0 +1,7 @@
+{
+
+  "ConnectionStrings": {
+    "YAMS": "Server=minime;user id=yams;password=tTOVcdmkTIQxU7xlO1G9;persistsecurityinfo=True;database=YAMS_ST;Trusted_Connection=True;"
+  }
+
+}

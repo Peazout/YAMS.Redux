@@ -55,12 +55,8 @@ namespace YAMS.Redux.GUI
             Servers.ItemsSource = MinecraftServerHelper.Servers;
             ServerLog.ItemsSource = LogRows;
 
-            BackgroundWorker worker = new BackgroundWorker();
-            worker.WorkerReportsProgress = true;
-            worker.DoWork += worker_DoWork;
-            worker.ProgressChanged += worker_ProgressChanged;
-
-            worker.RunWorkerAsync();
+            Thread work = new Thread(new ThreadStart(YAMS.Redux.Core.AppCore.Execute));
+            work.Start();
 
         }
 
