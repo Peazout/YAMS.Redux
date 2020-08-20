@@ -8,16 +8,16 @@ namespace YAMS.Redux.Data
 {
     public class MinecraftServerSetting
     {
-        [Key]
-        [Column(Order = 0)]
+        // [Key]
+        // [Column(Order = 0)]
         [StringLength(255)]
         public string Name { get; set; }
 
         [StringLength(255)]
         public string Value { get; set; }
 
-        [Key]
-        [Column(Order = 1)]
+        // [Key]
+        // [Column(Order = 1)]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int ServerId { get; set; }
     }

@@ -1,13 +1,29 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace YAMS.Redux.Data
 {
     public partial class JobSetting
     {
 
-        public JobSettingConfig Config { get; set; }
+        private JobSettingConfig _config;
+        [NotMapped]
+        public JobSettingConfig Config
+        {
+            get
+            {
+                if (_config == null && !string.IsNullOrWhiteSpace(Args)) ParseArgs();
+                return _config;
+            }
+            set
+            {
+                _config = value;
+                Args = JsonConvert.SerializeObject(value);
+            }
+
+        }
 
         public JobSetting()
         {
@@ -22,7 +38,7 @@ namespace YAMS.Redux.Data
         }
 
     }
-    
+
     public class JobSettingConfig
     {
 

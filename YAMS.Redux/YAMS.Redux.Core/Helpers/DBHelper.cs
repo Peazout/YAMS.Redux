@@ -73,11 +73,9 @@ namespace YAMS.Redux.Core.Helpers
         /// <returns></returns>
         private static YAMSDatabase GetNewContext()
         {
-
-            AppCore.Config
-
-            var DB = new YAMSDatabase();
+            var DB = new YAMSDatabase(AppCore.Config.GetSection("ConnectionStrings:YAMS").Value);
             return DB;
+
         }
 
         #region Settings

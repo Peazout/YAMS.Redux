@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace YAMS.Redux.Data
 {
     public class ServerProcessID
     {
+
+        [Key]
+        public int Id { get; set; }
 
         public int PId { get; set; }
 

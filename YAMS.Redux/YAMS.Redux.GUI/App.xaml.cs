@@ -21,8 +21,6 @@ namespace YAMS.Redux.GUI
         {
 
             
-
-
             //var tmp = Configuration["ConnectionString"]["YAMS"];
 
 

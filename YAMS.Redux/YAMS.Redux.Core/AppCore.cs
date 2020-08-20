@@ -51,9 +51,9 @@ namespace YAMS.Redux.Core
             var builder = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
             .AddJsonFile("appconfig.json", optional: false, reloadOnChange: true)
+            // .AddJsonFile($"appconfig.{env.EnvironmentName}.json", optional: true)
             .AddEnvironmentVariables();
             Config = builder.Build();
-
 
             if (MyLog == null) MyLog = LogManager.GetCurrentClassLogger();
             MyLog.Info(i18t, "*** Execute of {Version} ***", Version);
@@ -113,6 +113,9 @@ namespace YAMS.Redux.Core
         /// </summary>
         public static void End()
         {
+            // Ensure to flush and stop internal timers/threads before application-exit (Avoid segmentation fault on Linux)
+            LogManager.Shutdown();
+
             throw new NotImplementedException("End function not completed.");
 
         }

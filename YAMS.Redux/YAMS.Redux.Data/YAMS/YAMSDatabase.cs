@@ -35,6 +35,9 @@ namespace YAMS.Redux.Data
                 .Property(c => c.Name)
                 .HasConversion<string>();
 
+            modelBuilder.Entity<MinecraftServerSetting>()
+            .HasKey(e => new { e.Name, e.ServerId });
+
             modelBuilder.Entity<MinecraftServer>()
                 .Property(c => c.ServerType)
                 .HasConversion<string>();

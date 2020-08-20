@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Threading;
 using System.Windows;
+using YAMS.Redux.Core;
 using YAMS.Redux.Core.Helpers;
 using YAMS.Redux.Data;
 
@@ -79,7 +80,7 @@ namespace YAMS.Redux.GUI
 
         private void OpenAdmin_Click(object sender, RoutedEventArgs e)
         {
-            MyLog.Debug("Opening admin webpage: {adminpage}", FilesAndFoldersHelper.HttpWebAdmin);
+            MyLog.Debug(AppCore.i18t, "Opening admin webpage: {adminpage}", FilesAndFoldersHelper.HttpWebAdmin);
             System.Diagnostics.Process.Start(FilesAndFoldersHelper.HttpWebAdmin);
         }
 
