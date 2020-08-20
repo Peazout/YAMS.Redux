@@ -22,8 +22,9 @@ namespace YAMS.Redux.Data
         {
             base.OnConfiguring(optionsBuilder);
 
-            optionsBuilder.UseSqlServer(CONNECTIONSTRING,
-            providerOptions => providerOptions.EnableRetryOnFailure());
+            optionsBuilder.UseMySQL(CONNECTIONSTRING);
+            //optionsBuilder.UseMySQL(CONNECTIONSTRING,
+            //providerOptions => providerOptions.EnableRetryOnFailure());
             // optionsBuilder.UseLoggerFactory(MyLoggerFactory);
 
         }

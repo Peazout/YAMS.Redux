@@ -17,7 +17,16 @@ namespace YAMS.Redux.Core
 
         public static IConfiguration Config { get; set; }
 
-        public static CultureInfo i18t => new CultureInfo(DBHelper.GetSetting(Data.YAMSSetting.CultureAndCountry).ToString());
+        public static CultureInfo i18t
+        {
+            get
+            {
+                var str = DBHelper.GetSetting(Data.YAMSSetting.CultureAndCountry);
+                if (string.IsNullOrWhiteSpace( str.GetValue)) return new CultureInfo("sv-SE");
+                return new CultureInfo(str.GetValue);
+            }
+
+        }
 
         public static bool IsService { get; private set; }
         public static string Version

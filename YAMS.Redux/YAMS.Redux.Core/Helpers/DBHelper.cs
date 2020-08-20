@@ -98,9 +98,10 @@ namespace YAMS.Redux.Core.Helpers
             using (var db = GetNewContext())
             {
                 var row = (from a in db.Settings where a.Name == name select a).SingleOrDefault();
+                // return row;
                 if (row != null) { return row; }
+                return new YAMSSettingItem();
             }
-            return null;
 
         }
 
