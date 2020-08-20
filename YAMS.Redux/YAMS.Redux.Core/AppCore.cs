@@ -1,7 +1,9 @@
-﻿using NLog;
+﻿using Microsoft.Extensions.Configuration;
+using NLog;
 using System;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Reflection;
 using YAMS.Redux.Core.Helpers;
 using YAMS.Redux.Data;
@@ -12,6 +14,8 @@ namespace YAMS.Redux.Core
     {
 
         private static Logger MyLog { get; set; }
+
+        public static IConfiguration Config { get; set; }
 
         public static CultureInfo i18t => new CultureInfo(DBHelper.GetSetting(Data.YAMSSetting.CultureAndCountry).ToString());
 
@@ -43,8 +47,16 @@ namespace YAMS.Redux.Core
         /// </summary>
         public static void Execute()
         {
+
+            var builder = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appconfig.json", optional: false, reloadOnChange: true)
+            .AddEnvironmentVariables();
+            Config = builder.Build();
+
+
             if (MyLog == null) MyLog = LogManager.GetCurrentClassLogger();
-            MyLog.Info("*** Execute of {Version} ***", Version);
+            MyLog.Info(i18t, "*** Execute of {Version} ***", Version);
 
             // Check if we are a service
             Process cp = Process.GetCurrentProcess();

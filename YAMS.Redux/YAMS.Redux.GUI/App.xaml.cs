@@ -16,16 +16,12 @@ namespace YAMS.Redux.GUI
     public partial class App : Application
     {
 
-        public IConfiguration Config { get; set; }
 
         private void Application_Startup(object sender, StartupEventArgs e)
         {
-            var builder = new ConfigurationBuilder()
-             .SetBasePath(Directory.GetCurrentDirectory())
-             .AddJsonFile("appconfig.json", optional: false, reloadOnChange: true)
-             .AddEnvironmentVariables();
 
-            Config = builder.Build();
+            
+
 
             //var tmp = Configuration["ConnectionString"]["YAMS"];
 

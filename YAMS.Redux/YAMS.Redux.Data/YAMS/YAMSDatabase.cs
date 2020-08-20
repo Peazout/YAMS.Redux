@@ -10,11 +10,11 @@ namespace YAMS.Redux.Data
     public class YAMSDatabase : DbContext
     {
 
-        private static string CONNECTIONNAME;
+        private static string CONNECTIONSTRING;
 
-        public YAMSDatabase(string ConnectionName = "YAMS")
+        public YAMSDatabase(string ConnectionString)
         {
-            CONNECTIONNAME = ConnectionName;
+            CONNECTIONSTRING = ConnectionString;
 
         }
 
@@ -22,7 +22,7 @@ namespace YAMS.Redux.Data
         {
             base.OnConfiguring(optionsBuilder);
 
-            optionsBuilder.UseSqlServer(ConfigurationManager.ConnectionStrings[CONNECTIONNAME].ConnectionString,
+            optionsBuilder.UseSqlServer(CONNECTIONSTRING,
             providerOptions => providerOptions.EnableRetryOnFailure());
             // optionsBuilder.UseLoggerFactory(MyLoggerFactory);
 

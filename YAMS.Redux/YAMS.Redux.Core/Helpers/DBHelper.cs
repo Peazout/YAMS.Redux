@@ -73,7 +73,10 @@ namespace YAMS.Redux.Core.Helpers
         /// <returns></returns>
         private static YAMSDatabase GetNewContext()
         {
-            var DB = new YAMSDatabase(ConnectionName);
+
+            AppCore.Config
+
+            var DB = new YAMSDatabase();
             return DB;
         }
 
