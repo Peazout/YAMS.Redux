@@ -1,9 +1,12 @@
 ﻿using ServiceStack;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using YAMS.Redux.Data;
 using YAMS.Redux.Data.Mojang;
+using YAMS.Redux.Core.Helpers;
+
 
 namespace YAMS.Redux.Core.Web
 {
@@ -39,13 +42,15 @@ namespace YAMS.Redux.Core.Web
 
         #endregion
 
+        public IServiceClient ClientMeta { get; set; }
         public IServiceClient Client { get; set; }
 
-        public YAMSWebClient(string serviceurl)
+
+        public YAMSWebClient(string serviceurlmeta, string serviceurl)
         {
 
+            ClientMeta = new JsonServiceClient(serviceurlmeta);
             Client = new JsonServiceClient(serviceurl);
-           
 
         }
 
@@ -53,13 +58,14 @@ namespace YAMS.Redux.Core.Web
         {
             try
             {
-                var response = Client.Get<MojangManifest>(servicename);
+                var response = ClientMeta.Get<MojangManifest>(servicename);
                 return response;
 
-            } 
+            }
             catch (Exception ex)
             {
                 MyLog.Error(ex);
+                throw;
             }
 
             return null;
@@ -70,13 +76,14 @@ namespace YAMS.Redux.Core.Web
         {
             try
             {
-                var response = Client.Get<MojangDownloadFile>(servicename);
+                var response = ClientMeta.Get<MojangDownloadFile>(servicename);
                 return response;
 
             }
             catch (Exception ex)
             {
                 MyLog.Error(ex);
+                throw;
             }
 
             return null;
@@ -84,17 +91,39 @@ namespace YAMS.Redux.Core.Web
         }
 
 
-        public void GetJarFile(string url,string saveto)
+        public void GetJarFile(string url, string saveto)
         {
             try
             {
+                // FilesAndFoldersHelper.
+                var fs = new FileStream(saveto, FileMode.Create);
+                var servicename = url.Replace(FilesAndFoldersHelper.HttpMojangJar, "");
+                var stream = Client.Get<Stream>(servicename);
+
+                CopyStream(stream, fs);
+                stream.Close();
+                fs.Close();
 
             }
             catch (Exception ex)
             {
                 MyLog.Error(ex);
+                throw;
             }
 
+        }
+
+        /// <summary>
+        /// Copies the contents of input to output. Doesn't close either stream.
+        /// </summary>
+        public static void CopyStream(Stream input, Stream output)
+        {
+            byte[] buffer = new byte[8 * 1024];
+            int len;
+            while ((len = input.Read(buffer, 0, buffer.Length)) > 0)
+            {
+                output.Write(buffer, 0, len);
+            }
         }
 
     }

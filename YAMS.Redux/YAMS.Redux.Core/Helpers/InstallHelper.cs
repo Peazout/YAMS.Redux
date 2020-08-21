@@ -69,11 +69,14 @@ namespace YAMS.Redux.Core.Helpers
         public static void FirstRun()
         {
 
-            MyLog.Info("Start setup for first run of {AppName}", AppCore.AppName);
+            MyLog.Info(AppCore.i18t, "Start setup for first run of {AppName}", AppCore.AppName);
 
             // App settings
             DefaultPaths();
             DefaultSettings();
+
+            // Find minecraft versions
+            UpdateHelper.CheckForUpdates();
 
             // Setup 1 new server.
             MinecraftServerHelper.CreateNewServer("Yet another Minecraft server", DBHelper.GetSetting(YAMSSetting.DefaultServerMemory).GetValueAsInt);
@@ -93,6 +96,7 @@ namespace YAMS.Redux.Core.Helpers
             if (!Directory.Exists(FilesAndFoldersHelper.AppsFolder)) Directory.CreateDirectory(FilesAndFoldersHelper.AppsFolder);
             if (!Directory.Exists(FilesAndFoldersHelper.LibFolder)) Directory.CreateDirectory(FilesAndFoldersHelper.LibFolder);
             if (!Directory.Exists(FilesAndFoldersHelper.StorageFolder)) Directory.CreateDirectory(FilesAndFoldersHelper.StorageFolder);
+            if (!Directory.Exists(FilesAndFoldersHelper.JarFolder)) Directory.CreateDirectory(FilesAndFoldersHelper.JarFolder);
         }
 
         /// <summary>

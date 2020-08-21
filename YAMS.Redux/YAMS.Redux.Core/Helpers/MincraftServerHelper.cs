@@ -1,7 +1,9 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using MySqlX.XDevAPI.Relational;
+using Newtonsoft.Json.Linq;
 using NLog;
 using System;
 using System.Collections.Generic;
+using System.Configuration.Install;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
@@ -67,6 +69,8 @@ namespace YAMS.Redux.Core.Helpers
             foreach (var row in DBHelper.GetServers())
             {
                 var server = new MinecraftServerItem();
+                server.Data = row;
+                Servers.Add(server.ServerId, server);
 
             }
 
@@ -93,6 +97,11 @@ namespace YAMS.Redux.Core.Helpers
 
             // Adding to data 
             var server = DBHelper.AddServer(title, memory);
+
+            // Add what version of minecraft to run
+            var version = DBHelper.GetVersionFile(MinecraftServerType.Vanilla);
+            server.MinecraftJarFileId = version.Id;
+            DBHelper.UpdateServer(server);
 
             // Now the settings rom the YAMS prop files. User changable defaults.
             foreach (JObject option in jProps["options"])

@@ -47,7 +47,8 @@ namespace YAMS.Redux.Core.Helpers
         public static string RootFolder => new FileInfo(System.Reflection.Assembly.GetExecutingAssembly().Location).DirectoryName;
 
         // Web
-        public static string HttpMojang => "https://launchermeta.mojang.com/";
+        public static string HttpMojangMeta => "https://launchermeta.mojang.com/";
+        public static string HttpMojangJar => "https://launcher.mojang.com/";
         public static string HttpMojangManifest => "mc/game/version_manifest.json";
         public static string HttpWebAdmin => "http://" + DBHelper.GetSetting(YAMSSetting.ListenIP).GetValue + ":" + DBHelper.GetSetting(YAMSSetting.ListenPortAdmin).GetValue;
 
@@ -87,7 +88,7 @@ namespace YAMS.Redux.Core.Helpers
         public static string YAMSUpdater => Path.Combine(RootFolder, "YAMS.Updater.exe");
         public static string YAMSLibraryDll => Path.Combine(RootFolder, "YAMS-Library.dll");
         public static string YAMSService => Path.Combine(RootFolder, "YAMS-Service.exe");
-        public static string JarFile(MinecraftServerType servertype, int id) { return Path.Combine(JarFolder, servertype.ToString() + id.ToString() + ".jar"); }
+        public static string JarFile(MinecraftServerType servertype, int id) { return Path.Combine(JarFolder, servertype.ToString() + "_" + id.ToString() + ".jar"); }
         public static string MCServerArgsFile(int ServerId) { return Path.Combine(MCServerFolder(ServerId), "args.txt"); }
         public static string MCServerEulaFile(int ServerId) { return Path.Combine(MCServerFolder(ServerId), "eula.txt"); }
         public static string MCServerPropertyFile(int ServerId, bool IsUpdateName = false)

@@ -290,7 +290,7 @@ namespace YAMS.Redux.Core.Helpers
         {
             using (var db = GetNewContext())
             {
-                return db.ServerPID.Include(p => p.Active == true).ToList();
+                return db.ServerPID.Where(p => p.Active == true).ToList();
 
             }
 

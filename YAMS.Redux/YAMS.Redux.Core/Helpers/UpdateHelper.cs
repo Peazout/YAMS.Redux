@@ -67,11 +67,10 @@ namespace YAMS.Redux.Core.Helpers
         {
 
             // Checking for updates Mojang
-            var web = new Web.YAMSWebClient(FilesAndFoldersHelper.HttpMojang);
+            var web = new Web.YAMSWebClient(FilesAndFoldersHelper.HttpMojangMeta, FilesAndFoldersHelper.HttpMojangJar);
             var manifest = web.GetMojangManifestFile(FilesAndFoldersHelper.HttpMojangManifest);
-
-
             var release = manifest.GetRelease(servertype);
+
             if (DBHelper.GetVersionFile(release.id, servertype) == null)
             {
                 var download = web.GetDownloadFile(release.Url);
@@ -97,7 +96,7 @@ namespace YAMS.Redux.Core.Helpers
             {
                 
                 if (!sv.Value.IsAutoUpdateSet) break;
-                MyLog.Info("Checking if server {title} needs update.", sv.Value.Data.Name);
+                MyLog.Info(AppCore.i18t,"Checking if server {title} needs update.", sv.Value.Data.Name);
 
                 // What is the latests
                 var ver = DBHelper.GetVersionFile(sv.Value.Data.ServerType);
