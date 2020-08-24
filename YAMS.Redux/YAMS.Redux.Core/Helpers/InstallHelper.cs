@@ -94,9 +94,13 @@ namespace YAMS.Redux.Core.Helpers
         {
             MyLog.Info("Creating default directories.");
             if (!Directory.Exists(FilesAndFoldersHelper.AppsFolder)) Directory.CreateDirectory(FilesAndFoldersHelper.AppsFolder);
+
             if (!Directory.Exists(FilesAndFoldersHelper.LibFolder)) Directory.CreateDirectory(FilesAndFoldersHelper.LibFolder);
+
             if (!Directory.Exists(FilesAndFoldersHelper.StorageFolder)) Directory.CreateDirectory(FilesAndFoldersHelper.StorageFolder);
+
             if (!Directory.Exists(FilesAndFoldersHelper.JarFolder)) Directory.CreateDirectory(FilesAndFoldersHelper.JarFolder);
+
         }
 
         /// <summary>

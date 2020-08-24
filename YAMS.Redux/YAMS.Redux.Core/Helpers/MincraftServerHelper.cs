@@ -143,7 +143,7 @@ namespace YAMS.Redux.Core.Helpers
                 try
                 {
                     Process.GetProcessById(row.PId).Kill();
-                    MyLog.Warn("Killed a overlocked processes {PId}", row.PId);
+                    MyLog.Warn(AppCore.i18t, "Killed a overlocked processes {PId}", row.PId);
                     // TODO: Verify it´s closed?
                     // TODO: Just remove it.  DBHelper.DeleteActiveServerPID(row.PId);
                     DBHelper.SetUnactiveServerPID(row.PId);
@@ -152,6 +152,7 @@ namespace YAMS.Redux.Core.Helpers
                 catch (Exception ex)
                 {
                     MyLog.Warn(ex, "Process {pid} not killed", row.PId);
+                    throw;
                 }
 
             }

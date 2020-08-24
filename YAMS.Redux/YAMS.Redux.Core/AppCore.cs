@@ -1,10 +1,12 @@
 ﻿using Microsoft.Extensions.Configuration;
 using NLog;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
+using YAMS.Redux.Core.Entity;
 using YAMS.Redux.Core.Helpers;
 using YAMS.Redux.Data;
 
@@ -109,6 +111,7 @@ namespace YAMS.Redux.Core
 
             // Start the webserver for user interface.
 
+
             throw new NotImplementedException("Execute function not completed.");
 
             // Done
@@ -125,7 +128,18 @@ namespace YAMS.Redux.Core
             // Ensure to flush and stop internal timers/threads before application-exit (Avoid segmentation fault on Linux)
             LogManager.Shutdown();
 
+            // Stop all the servers.
+            foreach (KeyValuePair<int, MinecraftServerItem> kvp in MinecraftServerHelper.Servers)
+            {
+                kvp.Value.Stop();
+            }
+
+            // Webserver close
+
+
             throw new NotImplementedException("End function not completed.");
+
+            MyLog.Info("YAMS functions closed.");
 
         }
 
