@@ -23,9 +23,9 @@ namespace YAMS.Redux.Core
         {
             get
             {
-                var str = DBHelper.GetSetting(Data.YAMSSetting.CultureAndCountry);
-                if (string.IsNullOrWhiteSpace( str.GetValue)) return new CultureInfo("sv-SE");
-                return new CultureInfo(str.GetValue);
+                var str = Config.GetSection("YAMS:i18t").Value;
+                if (string.IsNullOrWhiteSpace(str)) return new CultureInfo("sv-SE");
+                return new CultureInfo(str);
             }
 
         }
@@ -110,6 +110,7 @@ namespace YAMS.Redux.Core
             JobHelper.Init();
 
             // Start the webserver for user interface.
+
 
 
             throw new NotImplementedException("Execute function not completed.");

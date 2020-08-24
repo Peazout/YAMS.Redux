@@ -7,14 +7,23 @@ using System.Text;
 
 namespace YAMS.Redux.Data
 {
+
+    public enum DbProvider
+    {
+        MySQL,
+        MSSQL
+    }
+
     public class YAMSDatabase : DbContext
     {
 
         private static string CONNECTIONSTRING;
+        private static DbProvider PROVIDER;
 
-        public YAMSDatabase(string ConnectionString)
+        public YAMSDatabase(string ConnectionString, DbProvider provider)
         {
             CONNECTIONSTRING = ConnectionString;
+            PROVIDER = provider;
 
         }
 
@@ -22,10 +31,19 @@ namespace YAMS.Redux.Data
         {
             base.OnConfiguring(optionsBuilder);
 
-            optionsBuilder.UseMySQL(CONNECTIONSTRING);
-            //optionsBuilder.UseMySQL(CONNECTIONSTRING,
-            //providerOptions => providerOptions.EnableRetryOnFailure());
-            // optionsBuilder.UseLoggerFactory(MyLoggerFactory);
+            switch (PROVIDER)
+            {
+                case DbProvider.MSSQL:
+                optionsBuilder.UseSqlServer(CONNECTIONSTRING,
+                providerOptions => providerOptions.EnableRetryOnFailure());
+                    break;
+
+                default:
+                    optionsBuilder.UseMySQL(CONNECTIONSTRING);
+                    break;
+            }
+
+            // optionsBuilder.UseLoggerFactory(NLog.LogManager.LogFactory);
 
         }
 

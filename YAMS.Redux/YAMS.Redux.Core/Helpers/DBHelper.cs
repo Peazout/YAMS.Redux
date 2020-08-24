@@ -47,11 +47,23 @@ namespace YAMS.Redux.Core.Helpers
         /// Our connectname, set with Init()
         /// </summary>
         public static string ConnectionName { get; private set; }
+        /// <summary>
+        /// Databas provider for us, set with Init()
+        /// </summary>
+        public static DbProvider Provider { get; private set; }
 
-        public static void Init(string connectionname = "YAMS")
+        public static void Init(string connectionname = "YAMS", DbProvider provider = DbProvider.MySQL)
         {
-            ConnectionName = connectionname;
+            // Get connectionname
+            ConnectionName = AppCore.Config.GetSection("ConnectionStrings:YAMS").Value;
+            if (string.IsNullOrWhiteSpace(ConnectionName)) ConnectionName = connectionname;
 
+            // Get provider
+            var pro = AppCore.Config.GetSection("YAMS:DbEngine").Value;
+            if (string.IsNullOrWhiteSpace(pro)) Provider = provider;
+            else Provider = ParseProvider(pro);
+
+            // Test out the connection
             using (var MyDB = GetNewContext())
             {
                 if (!(MyDB.Database.GetService<IDatabaseCreator>() as RelationalDatabaseCreator).Exists())
@@ -68,14 +80,41 @@ namespace YAMS.Redux.Core.Helpers
         }
 
         /// <summary>
+        /// Try out the given value and parse it.
+        /// </summary>
+        /// <param name="provider"></param>
+        /// <returns></returns>
+        private static DbProvider ParseProvider(string provider)
+        {
+            try
+            {
+                return (DbProvider)Enum.Parse(typeof(DbProvider), provider);
+            }
+            catch (Exception ex)
+            {
+                MyLog.Trace("Failed parsing DbProvider: " + ex.ToString());
+                MyLog.Warn("Provider for database could not be parsed: " + provider);
+
+                var n = 0;
+                foreach (string p in Enum.GetNames(typeof(DbProvider)))
+                {
+                    n++;
+                    MyLog.Warn("(" + n + "):" + p);
+                }
+
+                throw;
+            }
+
+        }
+
+        /// <summary>
         /// Get a context using ConnectionName for connection string
         /// </summary>
         /// <returns></returns>
         private static YAMSDatabase GetNewContext()
         {
-            var DB = new YAMSDatabase(AppCore.Config.GetSection("ConnectionStrings:YAMS").Value);
+            var DB = new YAMSDatabase(ConnectionName, Provider);
             return DB;
-
         }
 
         #region Settings
@@ -380,7 +419,7 @@ namespace YAMS.Redux.Core.Helpers
         }
 
         #endregion
-        
+
         #region Logs
 
         /// <summary>
@@ -400,7 +439,7 @@ namespace YAMS.Redux.Core.Helpers
                 return query.ToList();
 
             }
-            
+
         }
 
         /// <summary>
@@ -414,9 +453,9 @@ namespace YAMS.Redux.Core.Helpers
                 var logrows = db.YAMSLog.Select(l => l.Logged >= before).ToArray();
                 db.RemoveRange(logrows);
                 db.SaveChanges();
-                    
+
             }
-            
+
         }
 
         #endregion

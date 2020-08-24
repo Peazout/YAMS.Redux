@@ -1,8 +1,10 @@
 ﻿using NLog;
+using ServiceStack.Text;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 using System.Threading;
 using YAMS.Redux.Core.Helpers;
 using YAMS.Redux.Data;
@@ -143,7 +145,66 @@ namespace YAMS.Redux.Core.Entity
                 return;
             }
 
+            // TODO: Remove file add to database?
+            if (File.Exists(FilesAndFoldersHelper.MCServerArgsFile(Data.Id)))
+            {
+                StreamReader reader = new StreamReader(FilesAndFoldersHelper.MCServerArgsFile(Data.Id));
+                String text = reader.ReadToEnd();
+                reader.Close();
+                Args = text;
+            }
+            else
+            {
+                Args = CreateProcessArgs(Args);
+            }
+
+
+
         }
+
+        private string CreateProcessArgs(string given)        
+        {
+            //
+            // Added from:
+            // https://www.spigotmc.org/threads/guide-optimizing-spigot-remove-lag-fix-tps-improve-performance.21726/page-10#post-1055873
+            //
+            var args = new StringBuilder();
+            args.Append("-server ");
+
+            //If we have enabled the java optimisations add the additional
+            //arguments. See http://www.minecraftforum.net/viewtopic.php?f=1012&t=68128
+            if ((bool)Data.EnableServerOptimisations)
+            {
+                // Memory
+                args.Append(" -Xmx" + Data.AssignedMemory + "M -Xms" + Data.AssignedMemory + @"M ");
+
+                // GC Cores
+                var intGCCores = Environment.ProcessorCount - 1;
+                if (intGCCores == 0) intGCCores = 1;
+                args.Append(" -XX:ParallelGCThreads = " + intGCCores + " ");
+
+
+
+                // Needed for some of the options
+                args.Append(" -UnlockExperimentalVMOptions ");
+
+                // the rest
+                args.Append(" -XX:+AlwaysPreTouch ");
+                args.Append(" -XX:+UseLargePagesInMetaspace ");
+                args.Append(" -XX:+UseConcMarkSweepGC ");
+                args.Append(" -XX:+UseParNewGC ");
+                args.Append(" -XX:+CMSIncrementalPacing ");
+
+            }
+
+            // After this the jarfilename will be added.
+            args.Append(" -jar ");
+
+            // And return
+            return args.ToString();
+
+        }
+
 
         /// <summary>
         /// Send the stop command too the server for it to stop.
