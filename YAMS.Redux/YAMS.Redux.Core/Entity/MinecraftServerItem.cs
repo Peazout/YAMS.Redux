@@ -120,7 +120,7 @@ namespace YAMS.Redux.Core.Entity
         public void Start()
         {
             if (Running) return;
-            if (Data.Id == -1)
+            if (ServerId == -1)
             {
                 MyLog.Error("Can not start a server without ID."); // Do we need this, we throw a exception
                 throw new Exception("No MinecraftServer ID");
@@ -133,7 +133,7 @@ namespace YAMS.Redux.Core.Entity
             // Checking java bin
             if (!File.Exists(JavaPath))
             {
-                MyLog.Log(GetLogEvent(NLog.LogLevel.Warn, "Expected Java was not found, abort server start. Expected path => " + JavaPath, Data.Id));
+                MyLog.Log(GetLogEvent(NLog.LogLevel.Warn, "Expected Java was not found, abort server start. Expected path => " + JavaPath, ServerId));
                 return;
             }
 
@@ -141,14 +141,14 @@ namespace YAMS.Redux.Core.Entity
             var jarpath = FilesAndFoldersHelper.JarFile(Data.ServerType, Data.MinecraftJarFileId);
             if (!File.Exists(jarpath))
             {
-                MyLog.Log(GetLogEvent(NLog.LogLevel.Error, "Server.jar was not found, expected => " + jarpath, Data.Id));
+                MyLog.Log(GetLogEvent(NLog.LogLevel.Error, "Server.jar was not found, expected => " + jarpath, ServerId));
                 return;
             }
 
             // TODO: Remove file add to database?
-            if (File.Exists(FilesAndFoldersHelper.MCServerArgsFile(Data.Id)))
+            if (File.Exists(FilesAndFoldersHelper.MCServerArgsFile(ServerId)))
             {
-                StreamReader reader = new StreamReader(FilesAndFoldersHelper.MCServerArgsFile(Data.Id));
+                StreamReader reader = new StreamReader(FilesAndFoldersHelper.MCServerArgsFile(ServerId));
                 String text = reader.ReadToEnd();
                 reader.Close();
                 Args = text;
@@ -158,10 +158,47 @@ namespace YAMS.Redux.Core.Entity
                 Args = CreateProcessArgs(Args);
             }
 
+            // Now setup the process to run the server.
+            JavaRunningMinecraft = new Process();
+            JavaRunningMinecraft.StartInfo.UseShellExecute = false;
+            JavaRunningMinecraft.StartInfo.FileName = JavaPath;
+            JavaRunningMinecraft.StartInfo.Arguments = Args;
+            JavaRunningMinecraft.StartInfo.CreateNoWindow = true;
+            JavaRunningMinecraft.StartInfo.RedirectStandardError = true;
+            JavaRunningMinecraft.StartInfo.RedirectStandardInput = true;
+            JavaRunningMinecraft.StartInfo.RedirectStandardOutput = true;
+            JavaRunningMinecraft.StartInfo.WorkingDirectory = FilesAndFoldersHelper.MCServerFolder(ServerId);
 
+            //Set up events
+            JavaRunningMinecraft.OutputDataReceived += new DataReceivedEventHandler(ServerMessageHandler);
+            JavaRunningMinecraft.ErrorDataReceived += new DataReceivedEventHandler(ServerMessageHandler);
+            JavaRunningMinecraft.EnableRaisingEvents = true;
+            JavaRunningMinecraft.Exited += new EventHandler(ServerExited);
+
+            //Finally start the thing
+            JavaRunningMinecraft.Start();
+            JavaRunningMinecraft.BeginOutputReadLine();
+            JavaRunningMinecraft.BeginErrorReadLine();
+
+            SafeStop = false;
+
+            MyLog.Info(AppCore.i18t, "Server {ServerId} Started with args => " + Args, ServerId);
+
+            //Try and open the firewall port
+            if (YAMSDataHelper.GetSettingYAMS("EnableOpenFirewall") == "true") NetworkHelper.OpenFirewallPort(Port, Data.ServerTitle);
+            if (YAMSDataHelper.GetSettingYAMS("EnablePortForwarding") == "true") NetworkHelper.OpenUPnP(Port, Data.ServerTitle, ListenIP);
+
+            //Save the process ID so we can kill if there is a crash
+            PID = JavaRunningMincraft.Id;
+            PIDHandler.AddPID(JavaRunningMincraft.Id);
 
         }
 
+        /// <summary>
+        /// Create string with args/commandline options for running the java server.
+        /// </summary>
+        /// <param name="given"></param>
+        /// <returns></returns>
         private string CreateProcessArgs(string given)        
         {
             //
@@ -205,6 +242,20 @@ namespace YAMS.Redux.Core.Entity
 
         }
 
+        /// <summary>
+        /// Process messages from the server and console.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ServerMessageHandler(object sender, DataReceivedEventArgs e)
+        {
+            MyLog.Trace("Servermessage => " + e.Data);
+
+            DateTime timestamp = DateTime.Now;
+
+            
+
+        }
 
         /// <summary>
         /// Send the stop command too the server for it to stop.
@@ -228,6 +279,8 @@ namespace YAMS.Redux.Core.Entity
             MyLog.Log(GetLogEvent(NLog.LogLevel.Info, msg, Data.Id));
 
         }
+
+
 
         #region Commands
 
