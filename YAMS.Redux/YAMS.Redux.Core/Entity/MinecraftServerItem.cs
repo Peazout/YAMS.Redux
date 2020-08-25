@@ -248,12 +248,13 @@ namespace YAMS.Redux.Core.Entity
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void ServerMessageHandler(object sender, DataReceivedEventArgs e)
-        {
-            MyLog.Trace("Servermessage => " + e.Data);
-
+        {            
             DateTime timestamp = DateTime.Now;
+            var msg = new MinecraftServerMessage(e);
+            if (!msg.IsNullMessage) MyLog.Trace("Servermessage => " + msg.Received.Data);
+            else return;
 
-            
+
 
         }
 

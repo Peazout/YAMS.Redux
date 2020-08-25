@@ -67,7 +67,7 @@ namespace YAMS.Redux.Core.Entity
             Match regMatch = regPlayerChat.Match(str);
             if (regMatch.Success)
             {
-                ThisMessage = new Chat();
+                ThisMessage = new ChattMessage();
                 ThisMessage.Message = str.Replace(regMatch.Groups[0].Value, "").Trim();
                 ThisMessage.UserName = regMatch.Groups[0].Value;
                 ThisMessage.UserName = ThisMessage.UserName.Substring(1).Replace(">", "");
@@ -78,7 +78,7 @@ namespace YAMS.Redux.Core.Entity
             regMatch = regConsoleChat.Match(str);
             if (regMatch.Success)
             {
-                ThisMessage = new Chat();
+                ThisMessage = new ChattMessage();
                 ThisMessage.Message = str.Replace(regMatch.Groups[0].Value, "").Trim();
                 ThisMessage.UserName = regMatch.Groups[0].Value;
                 // ThisMessage.UserName = ThisMessage.UserName.Substring(1).Remove((ThisMessage.UserName.Length - 2), 1);
