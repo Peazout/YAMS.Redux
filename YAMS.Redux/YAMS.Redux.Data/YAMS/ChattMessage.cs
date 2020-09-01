@@ -6,7 +6,7 @@ using System.Text;
 
 namespace YAMS.Redux.Data
 {
-    public class ChattMessage
+    public class ChatMessage
     {
         [Key]
         public int Id { get; set; }

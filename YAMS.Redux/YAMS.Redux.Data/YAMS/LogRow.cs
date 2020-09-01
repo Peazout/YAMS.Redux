@@ -7,7 +7,7 @@ using System.Text;
 namespace YAMS.Redux.Data
 {
 
-    public enum LogLevel
+    public enum ServerMessageLevel
     {
         All = 0,
         Trace = 1,

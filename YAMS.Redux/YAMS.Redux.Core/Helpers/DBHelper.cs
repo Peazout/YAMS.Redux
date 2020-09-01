@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
+using MySqlX.XDevAPI.Relational;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -425,14 +426,14 @@ namespace YAMS.Redux.Core.Helpers
         /// <summary>
         /// Return logrows recorded with NLog with desc Logged, desc Id.
         /// </summary>
-        public static List<LogRow> GetLog(int startindex = -1, int numberofrows = 500, LogLevel level = LogLevel.All, int serverid = -1)
+        public static List<LogRow> GetLog(int startindex = -1, int numberofrows = 500, ServerMessageLevel level = ServerMessageLevel.All, int serverid = -1)
         {
             using (var db = GetNewContext())
             {
                 var query = db.YAMSLog.AsQueryable();
                 if (serverid != -1) query = query.Where(x => x.ServerId == serverid);
                 if (startindex > -1) query = query.Where(x => x.Id > startindex);
-                if (level != LogLevel.All) query = query.Where(x => x.Level == level.ToString());
+                if (level != ServerMessageLevel.All) query = query.Where(x => x.Level == level.ToString());
                 query = query.OrderByDescending(x => x.Logged).OrderByDescending(x => x.Id);
                 query = query.Take(numberofrows);
                 // Preform the query.
@@ -477,6 +478,98 @@ namespace YAMS.Redux.Core.Helpers
                 (j.Hour == hour && j.Minute == minute))
                 .ToList();
 
+            }
+
+        }
+
+        #endregion
+
+        #region Player
+
+        /// <summary>
+        /// Add a new player to our database.
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="serverid"></param>
+        /// <param name="GUID"></param>
+        /// <param name="level"></param>
+        /// <returns></returns>
+        public static Player AddPlayer(string username, int serverid, string GUID = "")
+        {
+
+            using (var db = GetNewContext())
+            {
+                Player player = new Player();
+
+                player.Name = username;
+                player.ServerId = serverid;
+                player.LastConnected = DateTime.Now;
+                if (!string.IsNullOrWhiteSpace(GUID)) player.Guid = GUID;
+
+                db.Players.Add(player);
+                db.SaveChanges();
+                return player;
+            }
+
+        }
+        /// <summary>
+        /// Update player data in the db.
+        /// </summary>
+        /// <param name="player"></param>
+        /// <returns></returns>
+        public static Player UpdatePlayer(Player player)
+        {
+            using (var db = GetNewContext())
+            {
+                db.Players.Add(player);
+                db.SaveChanges();
+                return player;
+            }
+
+        }
+        /// <summary>
+        /// Return player searching with name.
+        /// </summary>
+        /// <returns></returns>
+        public static Player GetPlayerByName(int serverid, string  username)
+        {
+
+            using (var db = GetNewContext())
+            {
+                    return (from p in db.Players where p.Name == username && p.ServerId == serverid select p).SingleOrDefault();
+            }
+
+        }
+        /// <summary>
+        /// Return player searching by UUID.
+        /// </summary>
+        /// <param name="serverid"></param>
+        /// <param name="uuid"></param>
+        /// <returns></returns>
+        public static Player GetPlayerByUUID(int serverid, string uuid)
+        {
+
+            using (var db = GetNewContext())
+            {
+                return (from p in db.Players where p.Guid == uuid && p.ServerId == serverid select p).SingleOrDefault();
+            }
+
+        }
+
+        #endregion
+
+        #region Chat
+
+        /// <summary>
+        /// Add chatmessage to databas.
+        /// </summary>
+        /// <param name="row"></param>
+        public static void AddChatMessage(ChatMessage row)
+        {
+            using (YAMSDatabase db = GetNewContext())
+            {
+                db.Chats.Add(row);
+                db.SaveChanges();
             }
 
         }

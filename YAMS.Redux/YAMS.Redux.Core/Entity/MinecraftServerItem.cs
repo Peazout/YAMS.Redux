@@ -199,7 +199,7 @@ namespace YAMS.Redux.Core.Entity
         /// </summary>
         /// <param name="given"></param>
         /// <returns></returns>
-        private string CreateProcessArgs(string given)        
+        private string CreateProcessArgs(string given)
         {
             //
             // Added from:
@@ -248,14 +248,96 @@ namespace YAMS.Redux.Core.Entity
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void ServerMessageHandler(object sender, DataReceivedEventArgs e)
-        {            
+        {
             DateTime timestamp = DateTime.Now;
             var msg = new MinecraftServerMessage(e);
             if (!msg.IsNullMessage) MyLog.Trace("Servermessage => " + msg.Received.Data);
             else return;
 
+            switch (msg.GetMessageLevel())
+            {
+                case ServerMessageLevel.Chat:
+                    ChatMessage chat = msg.GetChatMessage();
+                    Player user = DBHelper.GetPlayer(ServerId, "", chat.UserName);
+                    if (user == null)
+                    {
+                        user = DBHelper.AddPlayer(chat.UserName, ServerId);
+                    }
+                    chat.UserId = user.Id;
+                    chat.ServerId = ServerId;
+                    DBHelper.AddChatMessage(chat);
+                    break;
+
+                case ServerMessageLevel.Error:
+
+                    break;
+
+                default:
+                    //See if it's a log in or log out event
+                    if (msg.IsUserLogin) DoPlayerLogin(msg.UserLoginName);
+                    if (msg.IsUserLogout) DoPlayerLogout(msg.UserLogoutName);
+                    if (msg.IsUUIDInMessage) SavePlayerUUID(msg.UUID, msg.UUIDName, ServerId);
+
+                    //See if it's the server version tag
+                    if (regServerVersion.Match(str).Success) ServerVersion = str.Replace("Starting minecraft server version ", "");
+
+                    //Detect game type
+                    if (regGameMode.Match(str).Success) GameMode = Convert.ToInt32(regGameMode.Match(str).Groups[1].Value);
+                    if (str.IndexOf("You need to agree to the EULA in order to run the server. Go to eula.txt for more info.") > -1)
+                    {
+                        this.AgreeEULA = true;
+                    }
+
+                    // Are we saving the world?
+                    if (str.Equals("Saved the game") && GameWorldSaved == MessageReceivedBit.Set) GameWorldSaved = MessageReceivedBit.Received;
+
+                    MyLog.Log(GetLogEvent(NLog.LogLevel.Info, str, ServerId));
+                    break;
+
+            }
+
+        }
+
+        private void SavePlayerUUID(string uuid, string username, int serverid)
+        {
+            var p = DBHelper.GetPlayerByName(serverid, username);
+            if (p == null)
+            {
+                DBHelper.AddPlayer(username, serverid, uuid);
+            }
+            else if (p.Guid == null)
+            {
+                p.Guid = uuid;
+                DBHelper.UpdatePlayer(p);
+            }
+
+        }
+
+        private void DoPlayerLogout(string username)
+        {
+            Players.Remove(username);
+            //Check if we should restart the server for an update or a request
+            // if (RestartWhenFree) IfEmptyRestart();
+        }
+
+        /// <summary>
+        /// Login events
+        /// </summary>
+        private void DoPlayerLogin(string username)
+        {
+            int intCounter = 0;
+            string strSafeName = username;
+            while (Players.ContainsKey(strSafeName))
+            {
+                //Player is logged in? Change their temp name
+                intCounter++;
+                strSafeName = username + "-" + intCounter.ToString(AppCore.i18t);
+            }
 
 
+
+            Players.Add(strSafeName, new Player(username, this));
+            HasChanged = true;
         }
 
         /// <summary>
